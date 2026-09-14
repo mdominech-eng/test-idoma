@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>IDOMA - Eye Tracking Test</title>
-  <!-- Libreria WebGazer.js da CDN -->
   <script src="https://cdn.jsdelivr.net/npm/webgazer@2.1.0/dist/webgazer.js" type="text/javascript"></script>
   <style>
     body { margin: 0; background: #000; color: #fff; font-family: sans-serif; text-align: center; overflow: hidden; }
-    #video-container { display: none; width: 100vw; height: 100vh; justify-content: center; align-items: center; position: relative; }
-    video { max-width: 100%; max-height: 100%; }
+    #video-container { display: none; width: 100vw; height: 100vh; justify-content: center; align-items: center; position: relative; background: #000; }
+    video { width: 100vw; height: 100vh; object-fit: contain; }
     #intro { position: absolute; top: 30%; width: 100%; z-index: 100; }
     
     .btn-start { padding: 18px 36px; font-size: 20px; cursor: pointer; background: #00a86b; color: white; border: none; border-radius: 6px; font-weight: bold; margin-top: 15px; }
@@ -43,31 +42,34 @@
     <div id="status"></div>
   </div>
 
-  <!-- Container per il Video e il Pulsante di Stop -->
+  <!-- Container per il Video Incorporato -->
   <div id="video-container">
     <button id="stop-btn" onclick="stopAndSave()">TERMINA E SALVA DATI</button>
-    <video id="myVideo" src="https://drive.google.com/uc?export=download&id=1512BMS4XmjqMY6pnLVgcwEq7dQ2Yv0xw" muted playsinline></video>
+    <!-- Il video caricato su GitHub -->
+    <video id="myVideo" src="video.mp4" preload="auto" muted playsinline></video>
   </div>
 
   <script>
     let gazeData = [];
     let isTesting = false;
+    let startTime = 0;
 
-    // Inizializza subito la webcam appena si carica la pagina
     window.onload = async function() {
       document.getElementById('status').innerText = "Inizializzazione fotocamera in corso...";
       
       try {
         await webgazer.setGazeListener(function(data, elapsedTime) {
           if (data == null || !isTesting) return;
+          
+          let relativeTime = Math.round(performance.now() - startTime);
+          
           gazeData.push({
-            time: Math.round(elapsedTime),
+            time: relativeTime,
             x: Math.round(data.x),
             y: Math.round(data.y)
           });
         }).begin();
 
-        // Mostra l'anteprima fotocamera SUBITO per verificare l'inquadratura
         webgazer.showVideoPreview(true).showPredictionPoints(false);
         document.getElementById('status').innerText = "Fotocamera pronta. Inquadrati bene e clicca AVVIA TEST.";
       } catch (err) {
@@ -76,17 +78,21 @@
     };
 
     function startTest() {
-      isTesting = true;
+      const video = document.getElementById('myVideo');
 
-      // Nasconde la casella webcam durante la visione del video per non distrarre l'utente
+      // Maschera la fotocamera e mostra il video
       try { webgazer.showVideoPreview(false); } catch(e) {}
-
       document.getElementById('intro').style.display = 'none';
       document.getElementById('video-container').style.display = 'flex';
       document.getElementById('stop-btn').style.display = 'block';
 
-      const video = document.getElementById('myVideo');
-      video.play();
+      // Fa partire il video e azzera il timer del CSV nello stesso istante
+      video.play().then(() => {
+        startTime = performance.now();
+        isTesting = true;
+      }).catch(err => {
+        alert("Errore durante la riproduzione del video. Assicurati che il file video.mp4 sia stato caricato su GitHub.");
+      });
 
       video.onended = function() {
         stopAndSave();
