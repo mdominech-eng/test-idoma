@@ -45,7 +45,6 @@
   <!-- Container per il Video Incorporato -->
   <div id="video-container">
     <button id="stop-btn" onclick="stopAndSave()">TERMINA E SALVA DATI</button>
-    <!-- Il video caricato su GitHub -->
     <video id="myVideo" src="video.mp4" preload="auto" playsinline></video>
   </div>
 
@@ -79,6 +78,10 @@
 
     function startTest() {
       const video = document.getElementById('myVideo');
+
+      // Forza l'attivazione dell'audio al clic dell'utente
+      video.muted = false;
+      video.volume = 1.0;
 
       // Maschera la fotocamera e mostra il video
       try { webgazer.showVideoPreview(false); } catch(e) {}
