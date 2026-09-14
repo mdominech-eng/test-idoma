@@ -3,18 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>IDOMA - Eye Tracking Test</title>
-  <!-- Libreria WebGazer.js caricata da CDN affidabile -->
+  <!-- Libreria WebGazer.js da CDN -->
   <script src="https://cdn.jsdelivr.net/npm/webgazer@2.1.0/dist/webgazer.js" type="text/javascript"></script>
   <style>
     body { margin: 0; background: #000; color: #fff; font-family: sans-serif; text-align: center; overflow: hidden; }
     #video-container { display: none; width: 100vw; height: 100vh; justify-content: center; align-items: center; position: relative; }
     video { max-width: 100%; max-height: 100%; }
-    #intro { position: absolute; top: 35%; width: 100%; }
+    #intro { position: absolute; top: 30%; width: 100%; z-index: 100; }
     
-    /* Stile per i pulsanti */
-    .btn-start { padding: 18px 36px; font-size: 20px; cursor: pointer; background: #00a86b; color: white; border: none; border-radius: 6px; font-weight: bold; }
+    .btn-start { padding: 18px 36px; font-size: 20px; cursor: pointer; background: #00a86b; color: white; border: none; border-radius: 6px; font-weight: bold; margin-top: 15px; }
     
-    /* Pulsante di stop d'emergenza in alto a destra */
     #stop-btn { 
       display: none; 
       position: absolute; 
@@ -40,12 +38,12 @@
   <!-- Schermata Iniziale -->
   <div id="intro">
     <h1>Test di Tracciamento Oculare - IDOMA</h1>
-    <p>Assicurati che la webcam sia attiva e di essere in un ambiente ben illuminato.</p>
+    <p>Posizionati al centro del riquadro della fotocamera in alto a sinistra.<br>Assicurati di essere ben illuminato e a una distanza confortevole dallo schermo.</p>
     <button class="btn-start" onclick="startTest()">AVVIA TEST</button>
     <div id="status"></div>
   </div>
 
-  <!-- Container per il Video (con link diretto a Google Drive) e il Pulsante di Stop -->
+  <!-- Container per il Video e il Pulsante di Stop -->
   <div id="video-container">
     <button id="stop-btn" onclick="stopAndSave()">TERMINA E SALVA DATI</button>
     <video id="myVideo" src="https://drive.google.com/uc?export=download&id=1512BMS4XmjqMY6pnLVgcwEq7dQ2Yv0xw" muted playsinline></video>
@@ -55,11 +53,11 @@
     let gazeData = [];
     let isTesting = false;
 
-    async function startTest() {
-      document.getElementById('status').innerText = "Inizializzazione webcam in corso...";
-
+    // Inizializza subito la webcam appena si carica la pagina
+    window.onload = async function() {
+      document.getElementById('status').innerText = "Inizializzazione fotocamera in corso...";
+      
       try {
-        // Inizializza WebGazer per registrare X, Y e tempo
         await webgazer.setGazeListener(function(data, elapsedTime) {
           if (data == null || !isTesting) return;
           gazeData.push({
@@ -69,50 +67,45 @@
           });
         }).begin();
 
-        // Nasconde il riquadro dell'anteprima webcam per non distrarre l'utente
-        webgazer.showVideoPreview(true).showPredictionPoints(true);
-
-        isTesting = true;
-
-        // Mostra il container del video
-        document.getElementById('intro').style.display = 'none';
-        document.getElementById('video-container').style.display = 'flex';
-        document.getElementById('stop-btn').style.display = 'block';
-
-        // Fa partire il video da Google Drive
-        const video = document.getElementById('myVideo');
-        video.play();
-
-        // Se il video arriva alla fine naturalmente
-        video.onended = function() {
-          stopAndSave();
-        };
-
+        // Mostra l'anteprima fotocamera SUBITO per verificare l'inquadratura
+        webgazer.showVideoPreview(true).showPredictionPoints(false);
+        document.getElementById('status').innerText = "Fotocamera pronta. Inquadrati bene e clicca AVVIA TEST.";
       } catch (err) {
-        alert("Errore nell'accesso alla webcam: assicurati di aver concesso i permessi al browser.");
-        console.error(err);
+        document.getElementById('status').innerText = "Errore: Consenti l'accesso alla webcam nelle impostazioni del browser.";
       }
+    };
+
+    function startTest() {
+      isTesting = true;
+
+      // Nasconde la casella webcam durante la visione del video per non distrarre l'utente
+      try { webgazer.showVideoPreview(false); } catch(e) {}
+
+      document.getElementById('intro').style.display = 'none';
+      document.getElementById('video-container').style.display = 'flex';
+      document.getElementById('stop-btn').style.display = 'block';
+
+      const video = document.getElementById('myVideo');
+      video.play();
+
+      video.onended = function() {
+        stopAndSave();
+      };
     }
 
-    // Funzione richiamata sia a fine video sia al click del pulsante rosso
     function stopAndSave() {
-      if (!isTesting) return; // Evita salvataggi doppi
+      if (!isTesting) return;
       isTesting = false;
 
       const video = document.getElementById('myVideo');
       video.pause();
       
-      // Ferma WebGazer e spegne la webcam
       try { webgazer.end(); } catch(e) {}
 
-      // Scarica il file CSV
       downloadCSV();
-      
-      // Nasconde il pulsante dopo il salvataggio
       document.getElementById('stop-btn').style.display = 'none';
     }
 
-    // Funzione per generare e scaricare il CSV
     function downloadCSV() {
       if (gazeData.length === 0) {
         alert("Nessun dato registrato.");
@@ -128,7 +121,6 @@
       const link = document.createElement("a");
       link.setAttribute("href", encodedUri);
       
-      // Crea un nome file univoco con la data/ora corrente
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
       link.setAttribute("download", `eyetracking_IDOMA_${timestamp}.csv`);
       
@@ -136,7 +128,7 @@
       link.click();
       document.body.removeChild(link);
 
-      alert('Test completato! File scaricato nei Download con ' + gazeData.length + ' punti registrati.');
+      alert('Test completato! File salvato con ' + gazeData.length + ' punti registrati.');
     }
   </script>
 </body>
