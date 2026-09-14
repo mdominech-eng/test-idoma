@@ -112,7 +112,7 @@
         return;
       }
 
-      let csvContent = "data:text/csv;charset=utf-8,Timestamp_ms,X_pixel,Y_pixel\n";
+      let csvContent = "data:text/csv;charset=utf-8,sep=,\nTimestamp_ms,X_pixel,Y_pixel\n";
       gazeData.forEach(function(row) {
         csvContent += `${row.time},${row.x},${row.y}\n`;
       });
