@@ -2,34 +2,30 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>IDOMA - Eye Tracking Test</title>
+  <title>IDOMA - Eye Tracking Test & Questionnaire</title>
   <script src="https://cdn.jsdelivr.net/npm/webgazer@2.1.0/dist/webgazer.js" type="text/javascript"></script>
   <style>
-    body { margin: 0; background: #000; color: #fff; font-family: sans-serif; text-align: center; overflow: hidden; }
+    body { margin: 0; background: #121212; color: #fff; font-family: 'Segoe UI', Arial, sans-serif; text-align: center; overflow-x: hidden; }
     #video-container { display: none; width: 100vw; height: 100vh; justify-content: center; align-items: center; position: relative; background: #000; }
     video { width: 100vw; height: 100vh; object-fit: contain; }
     #intro { position: absolute; top: 30%; width: 100%; z-index: 100; }
     
-    .btn-start { padding: 18px 36px; font-size: 20px; cursor: pointer; background: #00a86b; color: white; border: none; border-radius: 6px; font-weight: bold; margin-top: 15px; }
-    
+    .btn-start, .btn-submit { padding: 16px 32px; font-size: 18px; cursor: pointer; background: #00a86b; color: white; border: none; border-radius: 6px; font-weight: bold; margin-top: 20px; }
+    .btn-submit:hover { background: #008f5a; }
+
     #stop-btn { 
-      display: none; 
-      position: absolute; 
-      top: 20px; 
-      right: 20px; 
-      padding: 12px 24px; 
-      font-size: 15px; 
-      background: #e63946; 
-      color: white; 
-      border: none; 
-      border-radius: 5px; 
-      cursor: pointer; 
-      z-index: 9999;
-      font-weight: bold;
-      box-shadow: 0px 4px 6px rgba(0,0,0,0.3);
+      display: none; position: absolute; top: 20px; right: 20px; padding: 12px 24px; font-size: 15px; background: #e63946; color: white; border: none; border-radius: 5px; cursor: pointer; z-index: 9999; font-weight: bold;
     }
-    #stop-btn:hover { background: #c1121f; }
-    #status { margin-top: 15px; color: #aaa; font-size: 14px; }
+
+    /* Stile Questionario */
+    #survey-container { display: none; max-width: 800px; margin: 40px auto; text-align: left; background: #1e1e1e; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+    .section-title { color: #00a86b; border-bottom: 2px solid #00a86b; padding-bottom: 8px; margin-top: 30px; font-size: 20px; }
+    .question { margin-bottom: 25px; background: #2a2a2a; padding: 15px 20px; border-radius: 8px; }
+    .question p { margin-top: 0; font-weight: 600; font-size: 16px; }
+    label { display: block; margin: 8px 0; cursor: pointer; font-size: 15px; }
+    input[type="radio"], input[type="text"], textarea { margin-right: 10px; }
+    textarea, input[type="text"] { width: 100%; background: #121212; color: #fff; border: 1px solid #444; border-radius: 4px; padding: 10px; box-sizing: border-box; }
+    .likert-group { display: flex; justify-content: space-between; align-items: center; max-width: 500px; margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -39,34 +35,252 @@
     <h1>Test di Tracciamento Oculare - IDOMA</h1>
     <p>Posizionati al centro del riquadro della fotocamera in alto a sinistra.<br>Assicurati di essere ben illuminato e a una distanza confortevole dallo schermo.</p>
     <button class="btn-start" onclick="startTest()">AVVIA TEST</button>
-    <div id="status"></div>
+    <div id="status" style="margin-top: 15px; color: #aaa;"></div>
   </div>
 
-  <!-- Container per il Video Incorporato -->
+  <!-- Video -->
   <div id="video-container">
-    <button id="stop-btn" onclick="stopAndSave()">TERMINA E SALVA DATI</button>
+    <button id="stop-btn" onclick="stopAndShowSurvey()">TERMINA VIDEO E VAI AL QUESTIONARIO</button>
     <video id="myVideo" src="video.mp4" preload="auto" playsinline></video>
+  </div>
+
+  <!-- Questionario -->
+  <div id="survey-container">
+    <h2>Questionario di Valutazione - Prototipo IDOMA</h2>
+    <p style="color: #aaa;">La registrazione fotocamera è terminata. Rispondi alle seguenti domande per completare lo studio.</p>
+
+    <form id="surveyForm">
+      <!-- Section A -->
+      <div class="section-title">Section A — Participant profile</div>
+      
+      <div class="question">
+        <p>1. What is your age group?</p>
+        <label><input type="radio" name="q_age" value="18–24" required> 18–24</label>
+        <label><input type="radio" name="q_age" value="25–34"> 25–34</label>
+        <label><input type="radio" name="q_age" value="35–44"> 35–44</label>
+        <label><input type="radio" name="q_age" value="45–54"> 45–54</label>
+        <label><input type="radio" name="q_age" value="55–65"> 55–65</label>
+      </div>
+
+      <div class="question">
+        <p>2. How do you identify?</p>
+        <label><input type="radio" name="q_gender" value="Female" required> Female</label>
+        <label><input type="radio" name="q_gender" value="Male"> Male</label>
+        <label><input type="radio" name="q_gender" value="Non-binary"> Non-binary</label>
+        <label><input type="radio" name="q_gender" value="Prefer not to say"> Prefer not to say</label>
+      </div>
+
+      <div class="question">
+        <p>3. How would you describe your current financial situation?</p>
+        <label><input type="radio" name="q_finance" value="Low" required> Low</label>
+        <label><input type="radio" name="q_finance" value="Lower-middle"> Lower-middle</label>
+        <label><input type="radio" name="q_finance" value="Middle"> Middle</label>
+        <label><input type="radio" name="q_finance" value="Upper-middle"> Upper-middle</label>
+        <label><input type="radio" name="q_finance" value="High"> High</label>
+        <label><input type="radio" name="q_finance" value="Prefer not to say"> Prefer not to say</label>
+      </div>
+
+      <div class="question">
+        <p>4. Who usually decides on the purchase of small kitchen appliances in your household?</p>
+        <label><input type="radio" name="q_decision" value="Mainly me" required> Mainly me</label>
+        <label><input type="radio" name="q_decision" value="Together with other people"> Together with other people</label>
+        <label><input type="radio" name="q_decision" value="I influence the decision, but I do not decide directly"> I influence the decision, but I do not decide directly</label>
+        <label><input type="radio" name="q_decision" value="I almost never take part in the decision"> I almost never take part in the decision</label>
+      </div>
+
+      <div class="question">
+        <p>5. What is your current employment status?</p>
+        <label><input type="radio" name="q_employment" value="Employed" required> Employed</label>
+        <label><input type="radio" name="q_employment" value="Looking for work"> Looking for work</label>
+        <label><input type="radio" name="q_employment" value="Student"> Student</label>
+        <label><input type="radio" name="q_employment" value="Retired"> Retired</label>
+        <label><input type="radio" name="q_employment" value="Homemaker or mainly involved in household/family care"> Homemaker or mainly involved in household/family care</label>
+        <label><input type="radio" name="q_employment" value="Other"> Other</label>
+        <label><input type="radio" name="q_employment" value="Prefer not to say"> Prefer not to say</label>
+      </div>
+
+      <!-- Section B -->
+      <div class="section-title">Section B — Cooking habits and familiarity</div>
+
+      <div class="question">
+        <p>6. In a typical week, how often do you cook at home?</p>
+        <label><input type="radio" name="q_cook_freq" value="Every day" required> Every day</label>
+        <label><input type="radio" name="q_cook_freq" value="4–6 times a week"> 4–6 times a week</label>
+        <label><input type="radio" name="q_cook_freq" value="2–3 times a week"> 2–3 times a week</label>
+        <label><input type="radio" name="q_cook_freq" value="Once a week or less"> Once a week or less</label>
+      </div>
+
+      <div class="question">
+        <p>7. In a typical day, how much time do you spend cooking or preparing meals in total?</p>
+        <label><input type="radio" name="q_cook_time" value="Less than 15 minutes" required> Less than 15 minutes</label>
+        <label><input type="radio" name="q_cook_time" value="15–30 minutes"> 15–30 minutes</label>
+        <label><input type="radio" name="q_cook_time" value="31–60 minutes"> 31–60 minutes</label>
+        <label><input type="radio" name="q_cook_time" value="1–2 hours"> 1–2 hours</label>
+        <label><input type="radio" name="q_cook_time" value="More than 2 hours"> More than 2 hours</label>
+        <label><input type="radio" name="q_cook_time" value="It varies a lot from day to day"> It varies a lot from day to day</label>
+      </div>
+
+      <div class="question">
+        <p>8. Do you regularly use an air fryer?</p>
+        <label><input type="radio" name="q_airfryer_use" value="Yes, very often" required> Yes, very often</label>
+        <label><input type="radio" name="q_airfryer_use" value="Yes, occasionally"> Yes, occasionally</label>
+        <label><input type="radio" name="q_airfryer_use" value="Rarely"> Rarely</label>
+        <label><input type="radio" name="q_airfryer_use" value="No, but I am interested in it"> No, but I am interested in it</label>
+        <label><input type="radio" name="q_airfryer_use" value="No, and I am not interested in it"> No, and I am not interested in it</label>
+      </div>
+
+      <div class="question">
+        <p>9. How experienced do you feel in using kitchen appliances?</p>
+        <label><input type="radio" name="q_exp" value="Not at all" required> Not at all</label>
+        <label><input type="radio" name="q_exp" value="Slightly"> Slightly</label>
+        <label><input type="radio" name="q_exp" value="Fairly"> Fairly</label>
+        <label><input type="radio" name="q_exp" value="Very"> Very</label>
+      </div>
+
+      <div class="question">
+        <p>10. How important is price to you when choosing a kitchen appliance?</p>
+        <label><input type="radio" name="q_price_imp" value="Not important at all" required> Not important at all</label>
+        <label><input type="radio" name="q_price_imp" value="Slightly important"> Slightly important</label>
+        <label><input type="radio" name="q_price_imp" value="Fairly important"> Fairly important</label>
+        <label><input type="radio" name="q_price_imp" value="Very important"> Very important</label>
+      </div>
+
+      <!-- Section C -->
+      <div class="section-title">Section C — Sustainability orientation</div>
+
+      <div class="question">
+        <p>11. How important is it to you that a kitchen appliance is environmentally sustainable? (1 = Not important at all, 7 = Extremely important)</p>
+        <div class="likert-group">
+          <span>1</span><input type="radio" name="q_sust_imp" value="1" required>
+          <input type="radio" name="q_sust_imp" value="2">
+          <input type="radio" name="q_sust_imp" value="3">
+          <input type="radio" name="q_sust_imp" value="4">
+          <input type="radio" name="q_sust_imp" value="5">
+          <input type="radio" name="q_sust_imp" value="6">
+          <input type="radio" name="q_sust_imp" value="7"><span>7</span>
+        </div>
+      </div>
+
+      <div class="question">
+        <p>12. When buying a product, how much do you consider its environmental impact? (1 = Not at all, 7 = A great deal)</p>
+        <div class="likert-group">
+          <span>1</span><input type="radio" name="q_env_impact" value="1" required>
+          <input type="radio" name="q_env_impact" value="2">
+          <input type="radio" name="q_env_impact" value="3">
+          <input type="radio" name="q_env_impact" value="4">
+          <input type="radio" name="q_env_impact" value="5">
+          <input type="radio" name="q_env_impact" value="6">
+          <input type="radio" name="q_env_impact" value="7"><span>7</span>
+        </div>
+      </div>
+
+      <div class="question">
+        <p>13. How much do you generally trust sustainability claims made by brands? (1 = Not at all, 7 = A great deal)</p>
+        <div class="likert-group">
+          <span>1</span><input type="radio" name="q_trust_claims" value="1" required>
+          <input type="radio" name="q_trust_claims" value="2">
+          <input type="radio" name="q_trust_claims" value="3">
+          <input type="radio" name="q_trust_claims" value="4">
+          <input type="radio" name="q_trust_claims" value="5">
+          <input type="radio" name="q_trust_claims" value="6">
+          <input type="radio" name="q_trust_claims" value="7"><span>7</span>
+        </div>
+      </div>
+
+      <!-- Section D -->
+      <div class="section-title">Section D — Concept evaluation</div>
+
+      <div class="question"><p>14. How easy is the product to understand in terms of use? (1-7)</p>
+        <div class="likert-group"><span>1</span><input type="radio" name="q_easy_use" value="1" required><input type="radio" name="q_easy_use" value="2"><input type="radio" name="q_easy_use" value="3"><input type="radio" name="q_easy_use" value="4"><input type="radio" name="q_easy_use" value="5"><input type="radio" name="q_easy_use" value="6"><input type="radio" name="q_easy_use" value="7"><span>7</span></div>
+      </div>
+
+      <div class="question"><p>15. How innovative does the product seem to you? (1-7)</p>
+        <div class="likert-group"><span>1</span><input type="radio" name="q_innovative" value="1" required><input type="radio" name="q_innovative" value="2"><input type="radio" name="q_innovative" value="3"><input type="radio" name="q_innovative" value="4"><input type="radio" name="q_innovative" value="5"><input type="radio" name="q_innovative" value="6"><input type="radio" name="q_innovative" value="7"><span>7</span></div>
+      </div>
+
+      <div class="question"><p>16. How useful does the product seem in your daily life? (1-7)</p>
+        <div class="likert-group"><span>1</span><input type="radio" name="q_useful" value="1" required><input type="radio" name="q_useful" value="2"><input type="radio" name="q_useful" value="3"><input type="radio" name="q_useful" value="4"><input type="radio" name="q_useful" value="5"><input type="radio" name="q_useful" value="6"><input type="radio" name="q_useful" value="7"><span>7</span></div>
+      </div>
+
+      <div class="question"><p>17. How attractive do you find the product overall? (1-7)</p>
+        <div class="likert-group"><span>1</span><input type="radio" name="q_attractive" value="1" required><input type="radio" name="q_attractive" value="2"><input type="radio" name="q_attractive" value="3"><input type="radio" name="q_attractive" value="4"><input type="radio" name="q_attractive" value="5"><input type="radio" name="q_attractive" value="6"><input type="radio" name="q_attractive" value="7"><span>7</span></div>
+      </div>
+
+      <div class="question"><p>18. How much trust does the product inspire in you? (1-7)</p>
+        <div class="likert-group"><span>1</span><input type="radio" name="q_trust_prod" value="1" required><input type="radio" name="q_trust_prod" value="2"><input type="radio" name="q_trust_prod" value="3"><input type="radio" name="q_trust_prod" value="4"><input type="radio" name="q_trust_prod" value="5"><input type="radio" name="q_trust_prod" value="6"><input type="radio" name="q_trust_prod" value="7"><span>7</span></div>
+      </div>
+
+      <div class="question"><p>19. How consistent does the product seem with the idea of a sustainable kitchen appliance? (1-7)</p>
+        <div class="likert-group"><span>1</span><input type="radio" name="q_consistent_sust" value="1" required><input type="radio" name="q_consistent_sust" value="2"><input type="radio" name="q_consistent_sust" value="3"><input type="radio" name="q_consistent_sust" value="4"><input type="radio" name="q_consistent_sust" value="5"><input type="radio" name="q_consistent_sust" value="6"><input type="radio" name="q_consistent_sust" value="7"><span>7</span></div>
+      </div>
+
+      <div class="question"><p>20. How credible do you find the sustainability benefits associated with the product? (1-7)</p>
+        <div class="likert-group"><span>1</span><input type="radio" name="q_credible_benefits" value="1" required><input type="radio" name="q_credible_benefits" value="2"><input type="radio" name="q_credible_benefits" value="3"><input type="radio" name="q_credible_benefits" value="4"><input type="radio" name="q_credible_benefits" value="5"><input type="radio" name="q_credible_benefits" value="6"><input type="radio" name="q_credible_benefits" value="7"><span>7</span></div>
+      </div>
+
+      <div class="question"><p>21. How interested would you be in purchasing it if it were available on the market? (1-7)</p>
+        <div class="likert-group"><span>1</span><input type="radio" name="q_purchase_interest" value="1" required><input type="radio" name="q_purchase_interest" value="2"><input type="radio" name="q_purchase_interest" value="3"><input type="radio" name="q_purchase_interest" value="4"><input type="radio" name="q_purchase_interest" value="5"><input type="radio" name="q_purchase_interest" value="6"><input type="radio" name="q_purchase_interest" value="7"><span>7</span></div>
+      </div>
+
+      <div class="question"><p>22. How credible do you find the product’s promised benefits overall? (1-7)</p>
+        <div class="likert-group"><span>1</span><input type="radio" name="q_overall_credibility" value="1" required><input type="radio" name="q_overall_credibility" value="2"><input type="radio" name="q_overall_credibility" value="3"><input type="radio" name="q_overall_credibility" value="4"><input type="radio" name="q_overall_credibility" value="5"><input type="radio" name="q_overall_credibility" value="6"><input type="radio" name="q_overall_credibility" value="7"><span>7</span></div>
+      </div>
+
+      <div class="question">
+        <p>23. Would you be willing to pay a little more for a kitchen appliance that you consider to be truly more sustainable?</p>
+        <label><input type="radio" name="q_pay_more" value="Yes, definitely" required> Yes, definitely</label>
+        <label><input type="radio" name="q_pay_more" value="Probably yes"> Probably yes</label>
+        <label><input type="radio" name="q_pay_more" value="Not sure"> Not sure</label>
+        <label><input type="radio" name="q_pay_more" value="Probably no"> Probably no</label>
+        <label><input type="radio" name="q_pay_more" value="No, definitely not"> No, definitely not</label>
+      </div>
+
+      <div class="question">
+        <p>24. In which price range would you consider this product plausible?</p>
+        <label><input type="radio" name="q_price_range" value="Less than 100 €" required> Less than 100 €</label>
+        <label><input type="radio" name="q_price_range" value="100–149 €"> 100–149 €</label>
+        <label><input type="radio" name="q_price_range" value="150–199 €"> 150–199 €</label>
+        <label><input type="radio" name="q_price_range" value="200–249 €"> 200–249 €</label>
+        <label><input type="radio" name="q_price_range" value="250 € or more"> 250 € or more</label>
+      </div>
+
+      <!-- Section E -->
+      <div class="section-title">Section E — Open-ended questions</div>
+
+      <div class="question">
+        <p>25. Which aspects of the product stood out to you the most?</p>
+        <textarea name="q_open_stood_out" rows="4" placeholder="Type your response here..."></textarea>
+      </div>
+
+      <div class="question">
+        <p>26. Which aspects convinced you less or raised doubts?</p>
+        <textarea name="q_open_doubts" rows="4" placeholder="Type your response here..."></textarea>
+      </div>
+
+      <div class="question">
+        <p>27. Are there any sustainability-related aspects that you would like to see explained more clearly?</p>
+        <textarea name="q_open_clarifications" rows="4" placeholder="Type your response here..."></textarea>
+      </div>
+
+      <button type="button" class="btn-submit" onclick="submitSurvey()">INVIA E CONCLUDI IL TEST</button>
+    </form>
   </div>
 
   <script>
     let gazeData = [];
     let isTesting = false;
     let startTime = 0;
+    
+    // URL dell'Applicazione Web Google Apps Script
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxsi0axRfa9yIlvf52aiSoVkNdte1tldZ5GpTohpUsdshPaO7q1-EXTPVCuLmxFd8h0kA/exec";
 
     window.onload = async function() {
       document.getElementById('status').innerText = "Inizializzazione fotocamera in corso...";
-      
       try {
         await webgazer.setGazeListener(function(data, elapsedTime) {
           if (data == null || !isTesting) return;
-          
           let relativeTime = Math.round(performance.now() - startTime);
-          
-          gazeData.push({
-            time: relativeTime,
-            x: Math.round(data.x),
-            y: Math.round(data.y)
-          });
+          gazeData.push({ time: relativeTime, x: Math.round(data.x), y: Math.round(data.y) });
         }).begin();
 
         webgazer.showVideoPreview(true).showPredictionPoints(false);
@@ -78,66 +292,81 @@
 
     function startTest() {
       const video = document.getElementById('myVideo');
-
-      // Forza l'attivazione dell'audio al clic dell'utente
       video.muted = false;
       video.volume = 1.0;
 
-      // Maschera la fotocamera e mostra il video
       try { webgazer.showVideoPreview(false); } catch(e) {}
       document.getElementById('intro').style.display = 'none';
       document.getElementById('video-container').style.display = 'flex';
       document.getElementById('stop-btn').style.display = 'block';
 
-      // Fa partire il video e azzera il timer del CSV nello stesso istante
       video.play().then(() => {
         startTime = performance.now();
         isTesting = true;
       }).catch(err => {
-        alert("Errore durante la riproduzione del video. Assicurati che il file video.mp4 sia stato caricato su GitHub.");
+        alert("Errore nell'avvio del video.");
       });
 
       video.onended = function() {
-        stopAndSave();
+        stopAndShowSurvey();
       };
     }
 
-    function stopAndSave() {
-      if (!isTesting) return;
+    function stopAndShowSurvey() {
       isTesting = false;
-
       const video = document.getElementById('myVideo');
       video.pause();
-      
+
       try { webgazer.end(); } catch(e) {}
 
-      downloadCSV();
-      document.getElementById('stop-btn').style.display = 'none';
+      document.getElementById('video-container').style.display = 'none';
+      document.getElementById('survey-container').style.display = 'block';
+      window.scrollTo(0,0);
     }
 
-    function downloadCSV() {
-      if (gazeData.length === 0) {
-        alert("Nessun dato registrato.");
+    function submitSurvey() {
+      const form = document.getElementById('surveyForm');
+      if (!form.checkValidity()) {
+        alert("Per favore, rispondi a tutte le domande a scelta multipla prima di inviare.");
+        form.reportValidity();
         return;
       }
 
-      let csvContent = "data:text/csv;charset=utf-8,sep=,\nTimestamp_ms,X_pixel,Y_pixel\n";
+      const formData = new FormData(form);
+      let surveyHtml = `
+        <div style="font-family: Arial, sans-serif; padding: 20px; line-height: 1.6;">
+          <h1 style="color: #00a86b; border-bottom: 2px solid #00a86b;">IDOMA - Questionario Compilato</h1>
+          <p><strong>Data compilazione:</strong> ${new Date().toLocaleString()}</p>
+          <hr>
+      `;
+
+      formData.forEach((value, key) => {
+        surveyHtml += `<p><strong>${key.replace('q_', '').toUpperCase()}:</strong> ${value}</p>`;
+      });
+
+      surveyHtml += `</div>`;
+
+      let csvContent = "sep=,\nTimestamp_ms,X_pixel,Y_pixel\n";
       gazeData.forEach(function(row) {
         csvContent += `${row.time},${row.x},${row.y}\n`;
       });
 
-      const encodedUri = encodeURI(csvContent);
-      const link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      
-      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-      link.setAttribute("download", `eyetracking_IDOMA_${timestamp}.csv`);
-      
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      alert("Invio risposte e dati di tracciamento in corso...");
 
-      alert('Test completato! File salvato con ' + gazeData.length + ' punti registrati.');
+      fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ csvData: csvContent, surveyHtml: surveyHtml })
+      })
+      .then(() => {
+        alert("Test e questionario completati con successo! Grazie per la partecipazione.");
+        document.getElementById('survey-container').innerHTML = "<h2 style='text-align:center;'>Grazie per aver completato il test! Puoi chiudere questa scheda.</h2>";
+      })
+      .catch(error => {
+        alert("Errore durante l'invio dei dati.");
+        console.error('Error:', error);
+      });
     }
   </script>
 </body>
