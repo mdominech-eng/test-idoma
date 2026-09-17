@@ -9,20 +9,32 @@
     #video-container { display: none; width: 100vw; height: 100vh; justify-content: center; align-items: center; position: relative; background: #000; }
     video { width: 100vw; height: 100vh; object-fit: contain; }
     
-    /* Posizionato a destra per lasciare totalmente libero l'angolo in alto a sinistra per la webcam */
+    /* Riquadro centrato al 100% sullo schermo */
     #intro { 
       position: absolute; 
-      top: 20%; 
-      left: 38%; 
-      width: 58%; 
-      z-index: 100; 
+      top: 50%; 
+      left: 50%; 
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 650px; 
+      z-index: 10; 
       background: rgba(25,25,25,0.95); 
-      padding: 30px; 
+      padding: 35px; 
       border-radius: 12px; 
-      box-shadow: 0 4px 25px rgba(0,0,0,0.8); 
+      box-shadow: 0 4px 30px rgba(0,0,0,0.85); 
       text-align: left;
+      box-sizing: border-box;
     }
     
+    /* Forza la preview della fotocamera di WebGazer ad andare IN PRIMO PIANO in alto a sinistra */
+    #webgazerVideoContainer {
+      z-index: 9999 !important;
+      border: 2px solid #00a86b !important;
+      border-radius: 8px !important;
+      overflow: hidden !important;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+    }
+
     .lang-switch { margin-bottom: 20px; text-align: right; }
     .lang-btn { padding: 8px 16px; font-size: 14px; cursor: pointer; background: #333; color: white; border: 1px solid #555; border-radius: 4px; margin: 0 5px; font-weight: bold; }
     .lang-btn.active { background: #00a86b; border-color: #00a86b; }
@@ -49,7 +61,7 @@
 </head>
 <body>
 
-  <!-- Schermata Iniziale -->
+  <!-- Schermata Iniziale Centrata -->
   <div id="intro">
     <div class="lang-switch">
       <button class="lang-btn active" onclick="setLanguage('it')">Italiano</button>
@@ -67,7 +79,7 @@
       • Usa un PC con fotocamera inquadrata in un ambiente ben illuminato.
     </p>
     <button class="btn-start" id="txt-startbtn" onclick="startTest()">AVVIA IL TEST</button>
-    <div id="status" style="margin-top: 15px; color: #aaa; font-size: 13px;"></div>
+    <div id="status" style="margin-top: 15px; color: #00a86b; font-size: 13px; font-weight: bold;"></div>
   </div>
 
   <!-- Video Container -->
@@ -261,6 +273,7 @@
   <script>
     let gazeData = [];
     let isTesting = false;
+    let isCameraReady = false;
     let startTime = 0;
     let currentLang = 'it';
     
@@ -272,6 +285,9 @@
         desc: "Benvenuto/a nello studio sul prototipo <strong>IDOMA</strong>.<br>Guarda il video di presentazione normalmente, come se stessi osservando una pubblicità.<br><br><strong style='color: #00a86b;'>Informativa sulla Privacy:</strong><br>• Il sistema rileva <u>esclusivamente le coordinate dello sguardo</u> sullo schermo.<br>• <u>Nessuna immagine del tuo volto viene salvata</u>.<br>• Risposte al questionario 100% anonime.<br>• Usa un PC con fotocamera inquadrata in un ambiente ben illuminato.",
         startBtn: "AVVIA IL TEST",
         stopBtn: "TERMINA E VAI AL QUESTIONARIO",
+        statusInit: "Inizializzazione fotocamera in corso...",
+        statusReady: "Fotocamera pronta. Inquadrati bene e clicca AVVIA IL TEST.",
+        statusErr: "Errore: Consenti l'accesso alla webcam nel browser.",
         surveyTitle: "Questionario di Valutazione Concept IDOMA",
         surveySub: "La registrazione della fotocamera è terminata. Rispondi alle seguenti domande per completare lo studio.",
         secA: "Sezione A — Profilo Partecipante",
@@ -314,6 +330,9 @@
         desc: "Welcome to the <strong>IDOMA</strong> research study.<br>Watch the presentation video naturally as if viewing a commercial.<br><br><strong style='color: #00a86b;'>Privacy Notice:</strong><br>• The system <u>only tracks gaze coordinates</u> on screen.<br>• <u>No face video or images are stored</u>.<br>• Questionnaire responses are 100% anonymous.<br>• Please use a PC with a camera in a well-lit room.",
         startBtn: "START TEST",
         stopBtn: "END VIDEO & GO TO QUESTIONNAIRE",
+        statusInit: "Initializing camera...",
+        statusReady: "Camera ready. Position yourself well and click START TEST.",
+        statusErr: "Error: Please allow webcam access in your browser.",
         surveyTitle: "IDOMA Concept Evaluation Questionnaire",
         surveySub: "Camera recording has ended. Please answer the following questions to complete the study.",
         secA: "Section A — Participant Profile",
@@ -363,6 +382,15 @@
       document.getElementById('txt-desc').innerHTML = t.desc;
       document.getElementById('txt-startbtn').innerText = t.startBtn;
       document.getElementById('stop-btn').innerText = t.stopBtn;
+      
+      // Aggiorna lo stato fotocamera in base alla lingua
+      const statusElem = document.getElementById('status');
+      if (isCameraReady) {
+        statusElem.innerText = t.statusReady;
+      } else {
+        statusElem.innerText = t.statusInit;
+      }
+
       document.getElementById('txt-survey-title').innerText = t.surveyTitle;
       document.getElementById('txt-survey-subtitle').innerText = t.surveySub;
       
@@ -444,7 +472,7 @@
     }
 
     window.onload = async function() {
-      document.getElementById('status').innerText = "Inizializzazione fotocamera in corso...";
+      document.getElementById('status').innerText = translations[currentLang].statusInit;
       try {
         await webgazer.setGazeListener(function(data, elapsedTime) {
           if (data == null || !isTesting) return;
@@ -453,9 +481,10 @@
         }).begin();
 
         webgazer.showVideoPreview(true).showPredictionPoints(false);
-        document.getElementById('status').innerText = "Fotocamera pronta. Inquadrati bene e clicca AVVIA TEST.";
+        isCameraReady = true;
+        document.getElementById('status').innerText = translations[currentLang].statusReady;
       } catch (err) {
-        document.getElementById('status').innerText = "Errore: Consenti l'accesso alla webcam nel browser.";
+        document.getElementById('status').innerText = translations[currentLang].statusErr;
       }
     };
 
@@ -506,7 +535,6 @@
         let wgContainer = document.getElementById('webgazerVideoContainer');
         if (wgContainer) { wgContainer.remove(); }
 
-        // Spegne ogni traccia residua attiva su mediaDevices
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
           navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
             stream.getTracks().forEach(track => track.stop());
@@ -516,7 +544,7 @@
         console.log("Arresto fotocamera:", e);
       }
 
-      // 3. Transizione alla schermata del questionario
+      // 3. Transizione al questionario
       document.getElementById('video-container').style.display = 'none';
       document.getElementById('survey-container').style.display = 'block';
       window.scrollTo(0,0);
