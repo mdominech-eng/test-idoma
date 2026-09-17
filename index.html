@@ -8,58 +8,74 @@
     body { margin: 0; background: #121212; color: #fff; font-family: 'Segoe UI', Arial, sans-serif; text-align: center; overflow-x: hidden; }
     #video-container { display: none; width: 100vw; height: 100vh; justify-content: center; align-items: center; position: relative; background: #000; }
     video { width: 100vw; height: 100vh; object-fit: contain; }
-    #intro { position: absolute; top: 25%; width: 80%; left: 10%; z-index: 100; background: rgba(30,30,30,0.9); padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.8); }
     
+    #intro { position: absolute; top: 15%; width: 75%; left: 12.5%; z-index: 100; background: rgba(25,25,25,0.95); padding: 35px; border-radius: 12px; box-shadow: 0 4px 25px rgba(0,0,0,0.8); }
+    
+    .lang-switch { margin-bottom: 20px; }
+    .lang-btn { padding: 8px 16px; font-size: 14px; cursor: pointer; background: #333; color: white; border: 1px solid #555; border-radius: 4px; margin: 0 5px; font-weight: bold; }
+    .lang-btn.active { background: #00a86b; border-color: #00a86b; }
+
     .btn-start, .btn-submit { padding: 16px 32px; font-size: 18px; cursor: pointer; background: #00a86b; color: white; border: none; border-radius: 6px; font-weight: bold; margin-top: 20px; }
     .btn-submit:hover { background: #008f5a; }
 
-    #stop-btn { 
-      display: none; position: absolute; top: 20px; right: 20px; padding: 12px 24px; font-size: 15px; background: #e63946; color: white; border: none; border-radius: 5px; cursor: pointer; z-index: 9999; font-weight: bold;
-    }
+    #stop-btn { display: none; position: absolute; top: 20px; right: 20px; padding: 12px 24px; font-size: 15px; background: #e63946; color: white; border: none; border-radius: 5px; cursor: pointer; z-index: 9999; font-weight: bold; }
 
     #survey-container { display: none; max-width: 800px; margin: 40px auto; text-align: left; background: #1e1e1e; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-    .section-title { color: #00a86b; border-bottom: 2px solid #00a86b; padding-bottom: 8px; margin-top: 35px; font-size: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .section-title { color: #00a86b; border-bottom: 2px solid #00a86b; padding-bottom: 8px; margin-top: 35px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; }
     .question { margin-bottom: 25px; background: #2a2a2a; padding: 18px 22px; border-radius: 8px; }
-    .question p { margin-top: 0; font-weight: 600; font-size: 16px; margin-bottom: 12px; }
-    .it-text { font-style: italic; color: #bbb; font-weight: normal; font-size: 14px; display: block; margin-top: 2px; }
-    label { display: block; margin: 10px 0; cursor: pointer; font-size: 15px; }
+    .question p { margin-top: 0; font-weight: 600; font-size: 15px; margin-bottom: 12px; }
+    label { display: block; margin: 10px 0; cursor: pointer; font-size: 14px; }
     input[type="radio"], input[type="text"], textarea { margin-right: 10px; }
     textarea, input[type="text"] { width: 100%; background: #121212; color: #fff; border: 1px solid #444; border-radius: 4px; padding: 12px; box-sizing: border-box; font-family: inherit; }
-    .likert-group { display: flex; justify-content: space-between; align-items: center; max-width: 550px; margin-top: 15px; background: #181818; padding: 10px 15px; border-radius: 6px; }
-    .likert-group span { font-size: 12px; color: #aaa; }
+    
+    /* Likert Scale Grafica Chiara */
+    .likert-scale { display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin-top: 15px; background: #181818; padding: 15px; border-radius: 8px; }
+    .likert-node { text-align: center; flex: 1; }
+    .likert-node input { margin: 0 0 6px 0; cursor: pointer; }
+    .likert-node label { font-size: 13px; color: #ddd; font-weight: bold; margin: 0; }
+    .likert-labels { display: flex; justify-content: space-between; font-size: 12px; color: #888; margin-top: 6px; }
   </style>
 </head>
 <body>
 
   <!-- Schermata Iniziale -->
   <div id="intro">
-    <h1>Test di Tracciamento Oculare - IDOMA</h1>
-    <p style="font-size: 16px; line-height: 1.5; color: #ddd;">
-      Benvenuto/a nello studio sul prototipo <strong>IDOMA</strong>.<br>
-      Guarda il video di presentazione normalmente, come se stessi osservando la pubblicità di un nuovo prodotto commerciale.<br>
-      <span style="color: #00a86b; font-weight: bold;">Nota:</span> Assicurati di svolgere il test da Computer/PC, con il volto ben illuminato e al centro della fotocamera.
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLanguage('it')">Italiano</button>
+      <button class="lang-btn" onclick="setLanguage('en')">English</button>
+    </div>
+
+    <h1 id="txt-title">Test di Tracciamento Oculare - IDOMA</h1>
+    <p id="txt-desc" style="font-size: 15px; line-height: 1.6; color: #ddd;">
+      Benvenuto/a nello studio sul prototipo di elettrodomestico <strong>IDOMA</strong>.<br>
+      Guarda il video di presentazione normalmente, come se stessi osservando la pubblicità di un nuovo prodotto.<br><br>
+      <strong style="color: #00a86b;">Informativa sulla Privacy & Tracciamento:</strong><br>
+      • Il sistema rileva <u>esclusivamente le coordinate del tuo sguardo</u> sullo schermo per fini scientifici.<br>
+      • <u>Nessuna immagine o video del tuo volto viene registrato o salvato</u> in alcun modo.<br>
+      • Tutte le risposte al questionario finale sono completamente anonime.<br>
+      • È richiesto l'uso di un Computer/PC con fotocamera attiva e ambiente ben illuminato.
     </p>
-    <button class="btn-start" onclick="startTest()">AVVIA TEST</button>
+    <button class="btn-start" id="txt-startbtn" onclick="startTest()">AVVIA IL TEST</button>
     <div id="status" style="margin-top: 15px; color: #aaa;"></div>
   </div>
 
   <!-- Video Container -->
   <div id="video-container">
-    <button id="stop-btn" onclick="stopAndShowSurvey()">TERMINA VIDEO E VAI AL QUESTIONARIO</button>
+    <button id="stop-btn" onclick="stopAndShowSurvey()">TERMINA E VAI AL QUESTIONARIO</button>
     <video id="myVideo" src="video.mp4" preload="auto" playsinline></video>
   </div>
 
   <!-- Questionario -->
   <div id="survey-container">
-    <h2>Questionario di Valutazione / Evaluation Questionnaire</h2>
-    <p style="color: #aaa;">La registrazione della fotocamera è terminata. Rispondi alle seguenti domande per completare lo studio.<br><i>The webcam tracking has ended. Please answer the following questions to complete the study.</i></p>
+    <h2 id="txt-survey-title">Questionario di Valutazione Concept IDOMA</h2>
+    <p id="txt-survey-subtitle" style="color: #aaa; font-size: 14px;">La registrazione della fotocamera è terminata. Rispondi alle seguenti domande per completare lo studio.</p>
 
     <form id="surveyForm">
       <!-- Section A -->
-      <div class="section-title">Section A — Participant profile <span class="it-text">Profilo dei partecipanti</span></div>
+      <div class="section-title" id="sec-a-title">Sezione A — Profilo Partecipante</div>
       
-      <div class="question" data-q="What is your age group? / Qual è la tua fascia d'età?">
-        <p>1. What is your age group? <span class="it-text">Qual è la tua fascia d'età?</span></p>
+      <div class="question">
+        <p id="q1-txt">1. Qual è la tua fascia d'età?</p>
         <label><input type="radio" name="q_age" value="18–24" required> 18–24</label>
         <label><input type="radio" name="q_age" value="25–34"> 25–34</label>
         <label><input type="radio" name="q_age" value="35–44"> 35–44</label>
@@ -67,198 +83,145 @@
         <label><input type="radio" name="q_age" value="55–65"> 55–65</label>
       </div>
 
-      <div class="question" data-q="How do you identify? / In quale genere ti identifichi?">
-        <p>2. How do you identify? <span class="it-text">In quale genere ti identifichi?</span></p>
-        <label><input type="radio" name="q_gender" value="Female (Donna)" required> Female <span class="it-text">Donna</span></label>
-        <label><input type="radio" name="q_gender" value="Male (Uomo)"> Male <span class="it-text">Uomo</span></label>
-        <label><input type="radio" name="q_gender" value="Non-binary (Non binario)"> Non-binary <span class="it-text">Non binario</span></label>
-        <label><input type="radio" name="q_gender" value="Prefer not to say (Preferisco non rispondere)"> Prefer not to say <span class="it-text">Preferisco non rispondere</span></label>
+      <div class="question">
+        <p id="q2-txt">2. In quale genere ti identifichi?</p>
+        <label><input type="radio" name="q_gender" value="Female" required> <span class="opt-female">Donna</span></label>
+        <label><input type="radio" name="q_gender" value="Male"> <span class="opt-male">Uomo</span></label>
+        <label><input type="radio" name="q_gender" value="Non-binary"> <span class="opt-nb">Non binario</span></label>
+        <label><input type="radio" name="q_gender" value="Prefer not to say"> <span class="opt-pnts">Preferisco non rispondere</span></label>
       </div>
 
-      <div class="question" data-q="How would you describe your current financial situation? / Come descriveresti la tua attuale situazione finanziaria?">
-        <p>3. How would you describe your current financial situation? <span class="it-text">Come descriveresti la tua attuale situazione finanziaria?</span></p>
-        <label><input type="radio" name="q_finance" value="Low (Bassa)" required> Low <span class="it-text">Bassa</span></label>
-        <label><input type="radio" name="q_finance" value="Lower-middle (Medio-bassa)"> Lower-middle <span class="it-text">Medio-bassa</span></label>
-        <label><input type="radio" name="q_finance" value="Middle (Media)"> Middle <span class="it-text">Media</span></label>
-        <label><input type="radio" name="q_finance" value="Upper-middle (Medio-alta)"> Upper-middle <span class="it-text">Medio-alta</span></label>
-        <label><input type="radio" name="q_finance" value="High (Alta)"> High <span class="it-text">Alta</span></label>
-        <label><input type="radio" name="q_finance" value="Prefer not to say (Preferisco non rispondere)"> Prefer not to say <span class="it-text">Preferisco non rispondere</span></label>
+      <div class="question">
+        <p id="q3-txt">3. Come descriveresti la tua attuale situazione finanziaria?</p>
+        <label><input type="radio" name="q_finance" value="Low" required> <span class="opt-low">Bassa</span></label>
+        <label><input type="radio" name="q_finance" value="Lower-middle"> <span class="opt-lm">Medio-bassa</span></label>
+        <label><input type="radio" name="q_finance" value="Middle"> <span class="opt-mid">Media</span></label>
+        <label><input type="radio" name="q_finance" value="Upper-middle"> <span class="opt-um">Medio-alta</span></label>
+        <label><input type="radio" name="q_finance" value="High"> <span class="opt-high">Alta</span></label>
+        <label><input type="radio" name="q_finance" value="Prefer not to say"> <span class="opt-pnts">Preferisco non rispondere</span></label>
       </div>
 
-      <div class="question" data-q="Who usually decides on the purchase of small kitchen appliances in your household? / Chi decide di solito l'acquisto di piccoli elettrodomestici in casa tua?">
-        <p>4. Who usually decides on the purchase of small kitchen appliances in your household? <span class="it-text">Chi decide di solito l'acquisto di piccoli elettrodomestici da cucina nella tua famiglia?</span></p>
-        <label><input type="radio" name="q_decision" value="Mainly me (Principalmente io)" required> Mainly me <span class="it-text">Principalmente io</span></label>
-        <label><input type="radio" name="q_decision" value="Together with other people (Insieme ad altre persone)"> Together with other people <span class="it-text">Insieme ad altre persone</span></label>
-        <label><input type="radio" name="q_decision" value="I influence the decision, but I do not decide directly (Influenzo la decisione, ma non decido direttamente)"> I influence the decision, but I do not decide directly <span class="it-text">Influenzo la decisione, ma non decido direttamente</span></label>
-        <label><input type="radio" name="q_decision" value="I almost never take part in the decision (Non prendo quasi mai parte alla decisione)"> I almost never take part in the decision <span class="it-text">Non prendo quasi mai parte alla decisione</span></label>
+      <div class="question">
+        <p id="q4-txt">4. Chi decide di solito l'acquisto di piccoli elettrodomestici in casa?</p>
+        <label><input type="radio" name="q_decision" value="Mainly me" required> <span class="opt-me">Principalmente io</span></label>
+        <label><input type="radio" name="q_decision" value="Together"> <span class="opt-together">Insieme ad altre persone</span></label>
+        <label><input type="radio" name="q_decision" value="Influence"> <span class="opt-infl">Influenzo la decisione, ma non decido io</span></label>
+        <label><input type="radio" name="q_decision" value="Never"> <span class="opt-never">Non prendo quasi mai parte alla decisione</span></label>
       </div>
 
-      <div class="question" data-q="What is your current employment status? / Qual è la tua attuale occupazione?">
-        <p>5. What is your current employment status? <span class="it-text">Qual è la tua attuale situazione lavorativa?</span></p>
-        <label><input type="radio" name="q_employment" value="Employed (Occupato/a)" required> Employed <span class="it-text">Occupato/a</span></label>
-        <label><input type="radio" name="q_employment" value="Looking for work (In cerca di occupazione)"> Looking for work <span class="it-text">In cerca di occupazione</span></label>
-        <label><input type="radio" name="q_employment" value="Student (Studente/ssa)"> Student <span class="it-text">Studente/ssa</span></label>
-        <label><input type="radio" name="q_employment" value="Retired (Pensionato/a)"> Retired <span class="it-text">Pensionato/a</span></label>
-        <label><input type="radio" name="q_employment" value="Homemaker or household care (Casalingo/a o cura della casa)"> Homemaker or mainly involved in household/family care <span class="it-text">Casalingo/a o principalmente occupato/a nella cura della casa/famiglia</span></label>
-        <label><input type="radio" name="q_employment" value="Other (Altro)"> Other <span class="it-text">Altro</span></label>
-        <label><input type="radio" name="q_employment" value="Prefer not to say (Preferisco non rispondere)"> Prefer not to say <span class="it-text">Preferisco non rispondere</span></label>
+      <div class="question">
+        <p id="q5-txt">5. Qual è la tua attuale occupazione?</p>
+        <label><input type="radio" name="q_employment" value="Employed" required> <span class="opt-emp">Occupato/a</span></label>
+        <label><input type="radio" name="q_employment" value="Looking for work"> <span class="opt-look">In cerca di occupazione</span></label>
+        <label><input type="radio" name="q_employment" value="Student"> <span class="opt-stud">Studente/ssa</span></label>
+        <label><input type="radio" name="q_employment" value="Retired"> <span class="opt-ret">Pensionato/a</span></label>
+        <label><input type="radio" name="q_employment" value="Homemaker"> <span class="opt-home">Casalingo/a o cura della casa</span></label>
+        <label><input type="radio" name="q_employment" value="Other"> <span class="opt-oth">Altro</span></label>
       </div>
 
       <!-- Section B -->
-      <div class="section-title">Section B — Cooking habits and familiarity <span class="it-text">Abitudini in cucina e familiarità</span></div>
+      <div class="section-title" id="sec-b-title">Sezione B — Abitudini & Prezzo</div>
 
-      <div class="question" data-q="In a typical week, how often do you cook at home? / In una settimana tipo, quanto spesso cucini a casa?">
-        <p>6. In a typical week, how often do you cook at home? <span class="it-text">In una settimana tipo, quanto spesso cucini a casa?</span></p>
-        <label><input type="radio" name="q_cook_freq" value="Every day (Tutti i giorni)" required> Every day <span class="it-text">Tutti i giorni</span></label>
-        <label><input type="radio" name="q_cook_freq" value="4–6 times a week (4–6 volte a settimana)"> 4–6 times a week <span class="it-text">4–6 volte a settimana</span></label>
-        <label><input type="radio" name="q_cook_freq" value="2–3 times a week (2–3 volte a settimana)"> 2–3 times a week <span class="it-text">2–3 volte a settimana</span></label>
-        <label><input type="radio" name="q_cook_freq" value="Once a week or less (Una volta a settimana o meno)"> Once a week or less <span class="it-text">Una volta a settimana o meno</span></label>
+      <div class="question">
+        <p id="q6-txt">6. In una settimana tipo, quanto spesso cucini a casa?</p>
+        <label><input type="radio" name="q_cook_freq" value="Every day" required> <span class="opt-daily">Tutti i giorni</span></label>
+        <label><input type="radio" name="q_cook_freq" value="4-6 times"> 4–6 volte a settimana</label>
+        <label><input type="radio" name="q_cook_freq" value="2-3 times"> 2–3 volte a settimana</label>
+        <label><input type="radio" name="q_cook_freq" value="Rarely"> <span class="opt-rare">Una volta a settimana o meno</span></label>
       </div>
 
-      <div class="question" data-q="In a typical day, how much time do you spend cooking? / In un giorno tipo, quanto tempo dedichi alla cucina?">
-        <p>7. In a typical day, how much time do you spend cooking or preparing meals in total? <span class="it-text">In un giorno tipo, quanto tempo passi in totale a cucinare o preparare pasti?</span></p>
-        <label><input type="radio" name="q_cook_time" value="Less than 15 minutes (Meno di 15 minuti)" required> Less than 15 minutes <span class="it-text">Meno di 15 minuti</span></label>
-        <label><input type="radio" name="q_cook_time" value="15–30 minutes (15–30 minuti)"> 15–30 minutes <span class="it-text">15–30 minuti</span></label>
-        <label><input type="radio" name="q_cook_time" value="31–60 minutes (31–60 minuti)"> 31–60 minutes <span class="it-text">31–60 minuti</span></label>
-        <label><input type="radio" name="q_cook_time" value="1–2 hours (1–2 ore)"> 1–2 hours <span class="it-text">1–2 ore</span></label>
-        <label><input type="radio" name="q_cook_time" value="More than 2 hours (Più di 2 ore)"> More than 2 hours <span class="it-text">Più di 2 ore</span></label>
-        <label><input type="radio" name="q_cook_time" value="It varies a lot (Varia molto da giorno a giorno)"> It varies a lot from day to day <span class="it-text">Varia molto di giorno in giorno</span></label>
+      <div class="question">
+        <p id="q7-txt">7. Utilizzi o sei interessato/a all'uso di una friggitrice ad aria?</p>
+        <label><input type="radio" name="q_airfryer_use" value="Regularly" required> <span class="opt-af1">Sì, la uso regolarmente</span></label>
+        <label><input type="radio" name="q_airfryer_use" value="Interested"> <span class="opt-af2">No, ma sono molto interessato/a</span></label>
+        <label><input type="radio" name="q_airfryer_use" value="Not interested"> <span class="opt-af3">No e non sono interessato/a</span></label>
       </div>
 
-      <div class="question" data-q="Do you regularly use an air fryer? / Utilizzi regolarmente una friggitrice ad aria?">
-        <p>8. Do you regularly use an air fryer? <span class="it-text">Utilizzi regolarmente una friggitrice ad aria?</span></p>
-        <label><input type="radio" name="q_airfryer_use" value="Yes, very often (Sì, molto spesso)" required> Yes, very often <span class="it-text">Sì, molto spesso</span></label>
-        <label><input type="radio" name="q_airfryer_use" value="Yes, occasionally (Sì, occasionalmente)"> Yes, occasionally <span class="it-text">Sì, occasionalmente</span></label>
-        <label><input type="radio" name="q_airfryer_use" value="Rarely (Raramente)"> Rarely <span class="it-text">Raramente</span></label>
-        <label><input type="radio" name="q_airfryer_use" value="No, but interested (No, ma sono interessato/a)"> No, but I am interested in it <span class="it-text">No, ma sono interessato/a</span></label>
-        <label><input type="radio" name="q_airfryer_use" value="No, not interested (No, e non sono interessato/a)"> No, and I am not interested in it <span class="it-text">No, e non sono interessato/a</span></label>
-      </div>
-
-      <div class="question" data-q="How experienced do you feel in using kitchen appliances? / Quanto ti senti esperto/a nell'uso di elettrodomestici da cucina?">
-        <p>9. How experienced do you feel in using kitchen appliances? <span class="it-text">Quanto ti senti esperto/a nell'uso degli elettrodomestici da cucina?</span></p>
-        <label><input type="radio" name="q_exp" value="Not at all (Per nulla)" required> Not at all <span class="it-text">Per nulla</span></label>
-        <label><input type="radio" name="q_exp" value="Slightly (Poco)"> Slightly <span class="it-text">Poco</span></label>
-        <label><input type="radio" name="q_exp" value="Fairly (Abbastanza)"> Fairly <span class="it-text">Abbastanza</span></label>
-        <label><input type="radio" name="q_exp" value="Very (Molto)"> Very <span class="it-text">Molto</span></label>
-      </div>
-
-      <div class="question" data-q="How important is price to you when choosing a kitchen appliance? / Quanto è importante il prezzo nella scelta di un elettrodomestico?">
-        <p>10. How important is price to you when choosing a kitchen appliance? <span class="it-text">Quanto è importante per te il prezzo nella scelta di un elettrodomestico da cucina?</span></p>
-        <label><input type="radio" name="q_price_imp" value="Not important at all (Per nulla importante)" required> Not important at all <span class="it-text">Per nulla importante</span></label>
-        <label><input type="radio" name="q_price_imp" value="Slightly important (Poco importante)"> Slightly important <span class="it-text">Poco importante</span></label>
-        <label><input type="radio" name="q_price_imp" value="Fairly important (Abbastanza importante)"> Fairly important <span class="it-text">Abbastanza importante</span></label>
-        <label><input type="radio" name="q_price_imp" value="Very important (Molto importante)"> Very important <span class="it-text">Molto importante</span></label>
+      <div class="question">
+        <p id="q8-txt">8. Quanto è importante il prezzo nella scelta di un elettrodomestico?</p>
+        <label><input type="radio" name="q_price_imp" value="Low" required> <span class="opt-p1">Poco importante</span></label>
+        <label><input type="radio" name="q_price_imp" value="Medium"> <span class="opt-p2">Abbastanza importante</span></label>
+        <label><input type="radio" name="q_price_imp" value="High"> <span class="opt-p3">Molto importante</span></label>
       </div>
 
       <!-- Section C -->
-      <div class="section-title">Section C — Sustainability orientation <span class="it-text">Orientamento alla sostenibilità</span></div>
+      <div class="section-title" id="sec-c-title">Sezione C — Valutazione del Concept IDOMA</div>
 
-      <div class="question" data-q="Importance of environmental sustainability / Importanza della sostenibilità ambientale dell'elettrodomestico">
-        <p>11. How important is it to you that a kitchen appliance is environmentally sustainable? <span class="it-text">Quanto è importante per te che un elettrodomestico da cucina sia ambientalmente sostenibile? (1 = Per nulla, 7 = Estremamente)</span></p>
-        <div class="likert-group">
-          <span>1 (Per nulla)</span>
-          <input type="radio" name="q_sust_imp" value="1" required>
-          <input type="radio" name="q_sust_imp" value="2">
-          <input type="radio" name="q_sust_imp" value="3">
-          <input type="radio" name="q_sust_imp" value="4">
-          <input type="radio" name="q_sust_imp" value="5">
-          <input type="radio" name="q_sust_imp" value="6">
-          <input type="radio" name="q_sust_imp" value="7">
-          <span>7 (Estremamente)</span>
+      <div class="question">
+        <p id="q9-txt">9. Quanto è importante per te che un elettrodomestico sia ambientalmente sostenibile?</p>
+        <div class="likert-scale">
+          <div class="likert-node"><input type="radio" name="q_sust_imp" value="1" required><br><label>1</label></div>
+          <div class="likert-node"><input type="radio" name="q_sust_imp" value="2"><br><label>2</label></div>
+          <div class="likert-node"><input type="radio" name="q_sust_imp" value="3"><br><label>3</label></div>
+          <div class="likert-node"><input type="radio" name="q_sust_imp" value="4"><br><label>4</label></div>
+          <div class="likert-node"><input type="radio" name="q_sust_imp" value="5"><br><label>5</label></div>
+          <div class="likert-node"><input type="radio" name="q_sust_imp" value="6"><br><label>6</label></div>
+          <div class="likert-node"><input type="radio" name="q_sust_imp" value="7"><br><label>7</label></div>
         </div>
+        <div class="likert-labels"><span class="lbl-low">Per nulla importante</span><span class="lbl-high">Estremamente importante</span></div>
       </div>
 
-      <div class="question" data-q="Consideration of environmental impact when buying / Quanto consideri l'impatto ambientale durante l'acquisto">
-        <p>12. When buying a product, how much do you consider its environmental impact? <span class="it-text">Quando acquisti un prodotto, quanto ne consideri l'impatto ambientale? (1 = Per nulla, 7 = Moltissimo)</span></p>
-        <div class="likert-group">
-          <span>1 (Per nulla)</span>
-          <input type="radio" name="q_env_impact" value="1" required>
-          <input type="radio" name="q_env_impact" value="2">
-          <input type="radio" name="q_env_impact" value="3">
-          <input type="radio" name="q_env_impact" value="4">
-          <input type="radio" name="q_env_impact" value="5">
-          <input type="radio" name="q_env_impact" value="6">
-          <input type="radio" name="q_env_impact" value="7">
-          <span>7 (Moltissimo)</span>
+      <div class="question">
+        <p id="q10-txt">10. Come valuti il DESIGN ESTETICO del prototipo IDOMA?</p>
+        <div class="likert-scale">
+          <div class="likert-node"><input type="radio" name="q_design" value="1" required><br><label>1</label></div>
+          <div class="likert-node"><input type="radio" name="q_design" value="2"><br><label>2</label></div>
+          <div class="likert-node"><input type="radio" name="q_design" value="3"><br><label>3</label></div>
+          <div class="likert-node"><input type="radio" name="q_design" value="4"><br><label>4</label></div>
+          <div class="likert-node"><input type="radio" name="q_design" value="5"><br><label>5</label></div>
+          <div class="likert-node"><input type="radio" name="q_design" value="6"><br><label>6</label></div>
+          <div class="likert-node"><input type="radio" name="q_design" value="7"><br><label>7</label></div>
         </div>
+        <div class="likert-labels"><span class="lbl-d1">Poco attraente</span><span class="lbl-d2">Molto attraente e moderno</span></div>
       </div>
 
-      <div class="question" data-q="Trust in sustainability claims by brands / Fiducia nelle dichiarazioni di sostenibilità dei brand">
-        <p>13. How much do you generally trust sustainability claims made by brands? <span class="it-text">Quanto ti fidi in generale delle dichiarazioni di sostenibilità fatte dai marchi? (1 = Per nulla, 7 = Moltissimo)</span></p>
-        <div class="likert-group">
-          <span>1 (Per nulla)</span>
-          <input type="radio" name="q_trust_claims" value="1" required>
-          <input type="radio" name="q_trust_claims" value="2">
-          <input type="radio" name="q_trust_claims" value="3">
-          <input type="radio" name="q_trust_claims" value="4">
-          <input type="radio" name="q_trust_claims" value="5">
-          <input type="radio" name="q_trust_claims" value="6">
-          <input type="radio" name="q_trust_claims" value="7">
-          <span>7 (Moltissimo)</span>
+      <div class="question">
+        <p id="q11-txt">11. Quanto ritieni INNOVATIVE ed UTILI le funzioni tecniche (scambiatore di calore, doppio cestello 3.5L/6L)?</p>
+        <div class="likert-scale">
+          <div class="likert-node"><input type="radio" name="q_innovation" value="1" required><br><label>1</label></div>
+          <div class="likert-node"><input type="radio" name="q_innovation" value="2"><br><label>2</label></div>
+          <div class="likert-node"><input type="radio" name="q_innovation" value="3"><br><label>3</label></div>
+          <div class="likert-node"><input type="radio" name="q_innovation" value="4"><br><label>4</label></div>
+          <div class="likert-node"><input type="radio" name="q_innovation" value="5"><br><label>5</label></div>
+          <div class="likert-node"><input type="radio" name="q_innovation" value="6"><br><label>6</label></div>
+          <div class="likert-node"><input type="radio" name="q_innovation" value="7"><br><label>7</label></div>
         </div>
+        <div class="likert-labels"><span class="lbl-i1">Per nulla utili/innovative</span><span class="lbl-i2">Estremamente utili/innovative</span></div>
+      </div>
+
+      <div class="question">
+        <p id="q12-txt">12. Quanto trovi CREDIBILE la promessa di risparmio energetico e sostenibilità del prodotto?</p>
+        <div class="likert-scale">
+          <div class="likert-node"><input type="radio" name="q_credibility" value="1" required><br><label>1</label></div>
+          <div class="likert-node"><input type="radio" name="q_credibility" value="2"><br><label>2</label></div>
+          <div class="likert-node"><input type="radio" name="q_credibility" value="3"><br><label>3</label></div>
+          <div class="likert-node"><input type="radio" name="q_credibility" value="4"><br><label>4</label></div>
+          <div class="likert-node"><input type="radio" name="q_credibility" value="5"><br><label>5</label></div>
+          <div class="likert-node"><input type="radio" name="q_credibility" value="6"><br><label>6</label></div>
+          <div class="likert-node"><input type="radio" name="q_credibility" value="7"><br><label>7</label></div>
+        </div>
+        <div class="likert-labels"><span class="lbl-c1">Per nulla credibile</span><span class="lbl-c2">Altamente credibile</span></div>
       </div>
 
       <!-- Section D -->
-      <div class="section-title">Section D — Concept evaluation <span class="it-text">Valutazione del concept</span></div>
+      <div class="section-title" id="sec-d-title">Sezione D — Prezzo & Feedback</div>
 
-      <div class="question" data-q="Ease of understanding product use / Facilità di comprensione dell'uso del prodotto"><p>14. How easy is the product to understand in terms of use? <span class="it-text">Quanto è facile da capire il prodotto in termini di utilizzo? (1-7)</span></p><div class="likert-group"><span>1</span><input type="radio" name="q_easy_use" value="1" required><input type="radio" name="q_easy_use" value="2"><input type="radio" name="q_easy_use" value="3"><input type="radio" name="q_easy_use" value="4"><input type="radio" name="q_easy_use" value="5"><input type="radio" name="q_easy_use" value="6"><input type="radio" name="q_easy_use" value="7"><span>7</span></div></div>
-
-      <div class="question" data-q="Product innovativeness / Innovatività del prodotto"><p>15. How innovative does the product seem to you? <span class="it-text">Quanto ti sembra innovativo il prodotto? (1-7)</span></p><div class="likert-group"><span>1</span><input type="radio" name="q_innovative" value="1" required><input type="radio" name="q_innovative" value="2"><input type="radio" name="q_innovative" value="3"><input type="radio" name="q_innovative" value="4"><input type="radio" name="q_innovative" value="5"><input type="radio" name="q_innovative" value="6"><input type="radio" name="q_innovative" value="7"><span>7</span></div></div>
-
-      <div class="question" data-q="Product usefulness in daily life / Utilità del prodotto nella vita quotidiana"><p>16. How useful does the product seem in your daily life? <span class="it-text">Quanto ti sembra utile il prodotto nella vita quotidiana? (1-7)</span></p><div class="likert-group"><span>1</span><input type="radio" name="q_useful" value="1" required><input type="radio" name="q_useful" value="2"><input type="radio" name="q_useful" value="3"><input type="radio" name="q_useful" value="4"><input type="radio" name="q_useful" value="5"><input type="radio" name="q_useful" value="6"><input type="radio" name="q_useful" value="7"><span>7</span></div></div>
-
-      <div class="question" data-q="Overall product attractiveness / Attrattività complessiva del prodotto"><p>17. How attractive do you find the product overall? <span class="it-text">Quanto trovi attraente il prodotto nel complesso? (1-7)</span></p><div class="likert-group"><span>1</span><input type="radio" name="q_attractive" value="1" required><input type="radio" name="q_attractive" value="2"><input type="radio" name="q_attractive" value="3"><input type="radio" name="q_attractive" value="4"><input type="radio" name="q_attractive" value="5"><input type="radio" name="q_attractive" value="6"><input type="radio" name="q_attractive" value="7"><span>7</span></div></div>
-
-      <div class="question" data-q="Trust inspired by the product / Fiducia ispirata dal prodotto"><p>18. How much trust does the product inspire in you? <span class="it-text">Quanta fiducia ti ispira il prodotto? (1-7)</span></p><div class="likert-group"><span>1</span><input type="radio" name="q_trust_prod" value="1" required><input type="radio" name="q_trust_prod" value="2"><input type="radio" name="q_trust_prod" value="3"><input type="radio" name="q_trust_prod" value="4"><input type="radio" name="q_trust_prod" value="5"><input type="radio" name="q_trust_prod" value="6"><input type="radio" name="q_trust_prod" value="7"><span>7</span></div></div>
-
-      <div class="question" data-q="Consistency with sustainable appliance concept / Coerenza con l'idea di elettrodomestico sostenibile"><p>19. How consistent does the product seem with the idea of a sustainable kitchen appliance? <span class="it-text">Quanto ti sembra coerente il prodotto con l'idea di elettrodomestico sostenibile? (1-7)</span></p><div class="likert-group"><span>1</span><input type="radio" name="q_consistent_sust" value="1" required><input type="radio" name="q_consistent_sust" value="2"><input type="radio" name="q_consistent_sust" value="3"><input type="radio" name="q_consistent_sust" value="4"><input type="radio" name="q_consistent_sust" value="5"><input type="radio" name="q_consistent_sust" value="6"><input type="radio" name="q_consistent_sust" value="7"><span>7</span></div></div>
-
-      <div class="question" data-q="Credibility of sustainability benefits / Credibilità dei benefici di sostenibilità"><p>20. How credible do you find the sustainability benefits associated with the product? <span class="it-text">Quanto trovi credibili i benefici di sostenibilità associati al prodotto? (1-7)</span></p><div class="likert-group"><span>1</span><input type="radio" name="q_credible_benefits" value="1" required><input type="radio" name="q_credible_benefits" value="2"><input type="radio" name="q_credible_benefits" value="3"><input type="radio" name="q_credible_benefits" value="4"><input type="radio" name="q_credible_benefits" value="5"><input type="radio" name="q_credible_benefits" value="6"><input type="radio" name="q_credible_benefits" value="7"><span>7</span></div></div>
-
-      <div class="question" data-q="Purchase interest if available / Interesse all'acquisto se disponibile sul mercato"><p>21. How interested would you be in purchasing it if it were available on the market? <span class="it-text">Quanto saresti interessato/a ad acquistarlo se fosse disponibile sul mercato? (1-7)</span></p><div class="likert-group"><span>1</span><input type="radio" name="q_purchase_interest" value="1" required><input type="radio" name="q_purchase_interest" value="2"><input type="radio" name="q_purchase_interest" value="3"><input type="radio" name="q_purchase_interest" value="4"><input type="radio" name="q_purchase_interest" value="5"><input type="radio" name="q_purchase_interest" value="6"><input type="radio" name="q_purchase_interest" value="7"><span>7</span></div></div>
-
-      <div class="question" data-q="Overall credibility of promised benefits / Credibilità complessiva dei benefici promessi"><p>22. How credible do you find the product’s promised benefits overall? <span class="it-text">Quanto trovi credibili i benefici promessi dal prodotto nel complesso? (1-7)</span></p><div class="likert-group"><span>1</span><input type="radio" name="q_overall_credibility" value="1" required><input type="radio" name="q_overall_credibility" value="2"><input type="radio" name="q_overall_credibility" value="3"><input type="radio" name="q_overall_credibility" value="4"><input type="radio" name="q_overall_credibility" value="5"><input type="radio" name="q_overall_credibility" value="6"><input type="radio" name="q_overall_credibility" value="7"><span>7</span></div></div>
-
-      <!-- NUOVA DOMANDA SULLA COMPRENSIONE TECNICA -->
-      <div class="question" data-q="Clarity of innovative technical features (Heat Exchanger, PID, NTC) / Chiarezza caratteristiche tecniche innovative"><p>23. How clear and easy to understand were the innovative technical features of the product (Heat Exchanger, PID Controller, NTC Sensor)? <span class="it-text">Quanto sono risultate chiare e facili da comprendere le caratteristiche tecniche innovative del prodotto (Scambiatore di calore, Controllore PID, Sensore NTC)? (1-7)</span></p><div class="likert-group"><span>1 (Per nulla)</span><input type="radio" name="q_tech_clarity" value="1" required><input type="radio" name="q_tech_clarity" value="2"><input type="radio" name="q_tech_clarity" value="3"><input type="radio" name="q_tech_clarity" value="4"><input type="radio" name="q_tech_clarity" value="5"><input type="radio" name="q_tech_clarity" value="6"><input type="radio" name="q_tech_clarity" value="7"><span>7 (Estremamente)</span></div></div>
-
-      <div class="question" data-q="Willingness to pay more for sustainability / Disponibilità a pagare di più per un prodotto sostenibile">
-        <p>24. Would you be willing to pay a little more for a kitchen appliance that you consider to be truly more sustainable? <span class="it-text">Saresti disposto/a a pagare un po' di più per un elettrodomestico che consideri davvero più sostenibile?</span></p>
-        <label><input type="radio" name="q_pay_more" value="Yes, definitely (Sì, decisamente)" required> Yes, definitely <span class="it-text">Sì, decisamente</span></label>
-        <label><input type="radio" name="q_pay_more" value="Probably yes (Probabilmente sì)"> Probably yes <span class="it-text">Probabilmente sì</span></label>
-        <label><input type="radio" name="q_pay_more" value="Not sure (Non ne sono sicuro/a)"> Not sure <span class="it-text">Non ne sono sicuro/a</span></label>
-        <label><input type="radio" name="q_pay_more" value="Probably no (Probabilmente no)"> Probably no <span class="it-text">Probabilmente no</span></label>
-        <label><input type="radio" name="q_pay_more" value="No, definitely not (No, decisamente no)"> No, definitely not <span class="it-text">No, decisamente no</span></label>
+      <div class="question">
+        <p id="q13-txt">13. In quale fascia di prezzo riterresti PLAUSIBILE questo prodotto?</p>
+        <label><input type="radio" name="q_price_range" value="<100" required> Less than 100 € / Meno di 100 €</label>
+        <label><input type="radio" name="q_price_range" value="100-149"> 100 € – 149 €</label>
+        <label><input type="radio" name="q_price_range" value="150-199"> 150 € – 199 €</label>
+        <label><input type="radio" name="q_price_range" value="200-249"> 200 € – 249 €</label>
+        <label><input type="radio" name="q_price_range" value=">250"> 250 € or more / 250 € o più</label>
       </div>
 
-      <div class="question" data-q="Plausible price range / Fascia di prezzo plausibile">
-        <p>25. In which price range would you consider this product plausible? <span class="it-text">In quale fascia di prezzo riterresti plausibile questo prodotto?</span></p>
-        <label><input type="radio" name="q_price_range" value="Less than 100 € (Meno di 100 €)" required> Less than 100 € <span class="it-text">Meno di 100 €</span></label>
-        <label><input type="radio" name="q_price_range" value="100–149 €"> 100–149 €</label>
-        <label><input type="radio" name="q_price_range" value="150–199 €"> 150–199 €</label>
-        <label><input type="radio" name="q_price_range" value="200–249 €"> 200–249 €</label>
-        <label><input type="radio" name="q_price_range" value="250 € or more (250 € o più)"> 250 € or more <span class="it-text">250 € o più</span></label>
+      <div class="question">
+        <p id="q14-txt">14. Quali aspetti del prodotto ti hanno colpito di più o sollevato dubbi?</p>
+        <textarea name="q_open_feedback" rows="4" placeholder="Scrivi qui la tua risposta opzionale..."></textarea>
       </div>
 
-      <!-- Section E -->
-      <div class="section-title">Section E — Open-ended questions <span class="it-text">Domande a risposta aperta</span></div>
-
-      <div class="question" data-q="Aspects that stood out the most / Aspetti che hanno colpito di più">
-        <p>26. Which aspects of the product stood out to you the most? <span class="it-text">Quali aspetti del prodotto ti hanno colpito di più?</span></p>
-        <textarea name="q_open_stood_out" rows="4" placeholder="Type your response here... / Scrivi qui la tua risposta..."></textarea>
-      </div>
-
-      <div class="question" data-q="Aspects that raised doubts / Aspetti che hanno convinto meno o sollevato dubbi">
-        <p>27. Which aspects convinced you less or raised doubts? <span class="it-text">Quali aspetti ti hanno convinto meno o ti hanno sollevato dubbi?</span></p>
-        <textarea name="q_open_doubts" rows="4" placeholder="Type your response here... / Scrivi qui la tua risposta..."></textarea>
-      </div>
-
-      <div class="question" data-q="Sustainability aspects to clarify / Aspetti di sostenibilità da chiarire meglio">
-        <p>28. Are there any sustainability-related aspects that you would like to see explained more clearly? <span class="it-text">Ci sono aspetti legati alla sostenibilità che vorresti vedere spiegati più chiaramente?</span></p>
-        <textarea name="q_open_clarifications" rows="4" placeholder="Type your response here... / Scrivi qui la tua risposta..."></textarea>
-      </div>
-
-      <button type="button" class="btn-submit" onclick="submitSurvey()">INVIA E CONCLUDI IL TEST / SUBMIT & COMPLETE</button>
+      <button type="button" class="btn-submit" id="btn-submit-txt" onclick="submitSurvey()">INVIA E CONCLUDI IL TEST</button>
+      <div id="submit-status" style="margin-top:15px; font-weight:bold; color:#00a86b;"></div>
     </form>
   </div>
 
@@ -266,8 +229,103 @@
     let gazeData = [];
     let isTesting = false;
     let startTime = 0;
+    let currentLang = 'it';
     
     const scriptURL = "https://script.google.com/macros/s/AKfycbxsi0axRfa9yIlvf52aiSoVkNdte1tldZ5GpTohpUsdshPaO7q1-EXTPVCuLmxFd8h0kA/exec";
+
+    const translations = {
+      it: {
+        title: "Test di Tracciamento Oculare - IDOMA",
+        desc: "Benvenuto/a nello studio sul prototipo di elettrodomestico <strong>IDOMA</strong>.<br>Guarda il video di presentazione normalmente, come se stessi osservando la pubblicità di un nuovo prodotto.<br><br><strong style='color: #00a86b;'>Informativa sulla Privacy & Tracciamento:</strong><br>• Il sistema rileva <u>esclusivamente le coordinate del tuo sguardo</u> sullo schermo per fini scientifici.<br>• <u>Nessuna immagine o video del tuo volto viene registrato o salvato</u> in alcun modo.<br>• Tutte le risposte al questionario finale sono completamente anonime.<br>• È richiesto l'uso di un Computer/PC con fotocamera attiva e ambiente ben illuminato.",
+        startBtn: "AVVIA IL TEST",
+        stopBtn: "TERMINA E VAI AL QUESTIONARIO",
+        surveyTitle: "Questionario di Valutazione Concept IDOMA",
+        surveySub: "La registrazione della fotocamera è terminata. Rispondi alle seguenti domande per completare lo studio.",
+        secA: "Sezione A — Profilo Partecipante",
+        q1: "1. Qual è la tua fascia d'età?",
+        q2: "2. In quale genere ti identifichi?",
+        q3: "3. Come descriveresti la tua attuale situazione finanziaria?",
+        q4: "4. Chi decide di solito l'acquisto di piccoli elettrodomestici in casa?",
+        q5: "5. Qual è la tua attuale occupazione?",
+        secB: "Sezione B — Abitudini & Prezzo",
+        q6: "6. In una settimana tipo, quanto spesso cucini a casa?",
+        q7: "7. Utilizzi o sei interessato/a all'uso di una friggitrice ad aria?",
+        q8: "8. Quanto è importante il prezzo nella scelta di un elettrodomestico?",
+        secC: "Sezione C — Valutazione del Concept IDOMA",
+        q9: "9. Quanto è importante per te che un elettrodomestico sia ambientalmente sostenibile?",
+        q10: "10. Come valuti il DESIGN ESTETICO del prototipo IDOMA?",
+        q11: "11. Quanto ritieni INNOVATIVE ed UTILI le funzioni tecniche (scambiatore di calore, doppio cestello 3.5L/6L)?",
+        q12: "12. Quanto trovi CREDIBILE la promessa di risparmio energetico e sostenibilità del prodotto?",
+        secD: "Sezione D — Prezzo & Feedback",
+        q13: "13. In quale fascia di prezzo riterresti PLAUSIBILE questo prodotto?",
+        q14: "14. Quali aspetti del prodotto ti hanno colpito di più o sollevato dubbi?",
+        submitBtn: "INVIA E CONCLUDI IL TEST"
+      },
+      en: {
+        title: "Eye Tracking Study - IDOMA",
+        desc: "Welcome to the <strong>IDOMA</strong> appliance prototype research study.<br>Please watch the presentation video naturally, as if you were viewing a commercial for a new product.<br><br><strong style='color: #00a86b;'>Privacy & Tracking Information:</strong><br>• The system <u>exclusively tracks your gaze coordinates</u> on screen for research purposes.<br>• <u>No images or video of your face are recorded or saved</u> under any circumstances.<br>• All responses in the final questionnaire are completely anonymous.<br>• Please use a Desktop/Laptop PC with an active camera in a well-lit room.",
+        startBtn: "START TEST",
+        stopBtn: "END VIDEO & GO TO QUESTIONNAIRE",
+        surveyTitle: "IDOMA Concept Evaluation Questionnaire",
+        surveySub: "Camera recording has ended. Please answer the following questions to complete the study.",
+        secA: "Section A — Participant Profile",
+        q1: "1. What is your age group?",
+        q2: "2. How do you identify?",
+        q3: "3. How would you describe your current financial situation?",
+        q4: "4. Who usually decides on purchasing small kitchen appliances in your household?",
+        q5: "5. What is your current employment status?",
+        secB: "Section B — Habits & Price",
+        q6: "6. In a typical week, how often do you cook at home?",
+        q7: "7. Do you use or are you interested in using an air fryer?",
+        q8: "8. How important is price to you when choosing a kitchen appliance?",
+        secC: "Section C — IDOMA Concept Evaluation",
+        q9: "9. How important is it to you that a kitchen appliance is environmentally sustainable?",
+        q10: "10. How do you rate the AESTHETIC DESIGN of the IDOMA prototype?",
+        q11: "11. How INNOVATIVE and USEFUL do you find the technical features (heat exchanger, dual 3.5L/6L baskets)?",
+        q12: "12. How CREDIBLE do you find the product's energy savings and sustainability claims?",
+        secD: "Section D — Price & Feedback",
+        q13: "13. In which price range would you consider this product PLAUSIBLE?",
+        q14: "14. Which aspects of the product stood out to you most or raised doubts?",
+        submitBtn: "SUBMIT & COMPLETE STUDY"
+      }
+    };
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const t = translations[lang];
+      document.getElementById('txt-title').innerHTML = t.title;
+      document.getElementById('txt-desc').innerHTML = t.desc;
+      document.getElementById('txt-startbtn').innerText = t.startBtn;
+      document.getElementById('stop-btn').innerText = t.stopBtn;
+      document.getElementById('txt-survey-title').innerText = t.surveyTitle;
+      document.getElementById('txt-survey-subtitle').innerText = t.surveySub;
+      
+      document.getElementById('sec-a-title').innerText = t.secA;
+      document.getElementById('q1-txt').innerText = t.q1;
+      document.getElementById('q2-txt').innerText = t.q2;
+      document.getElementById('q3-txt').innerText = t.q3;
+      document.getElementById('q4-txt').innerText = t.q4;
+      document.getElementById('q5-txt').innerText = t.q5;
+
+      document.getElementById('sec-b-title').innerText = t.secB;
+      document.getElementById('q6-txt').innerText = t.q6;
+      document.getElementById('q7-txt').innerText = t.q7;
+      document.getElementById('q8-txt').innerText = t.q8;
+
+      document.getElementById('sec-c-title').innerText = t.secC;
+      document.getElementById('q9-txt').innerText = t.q9;
+      document.getElementById('q10-txt').innerText = t.q10;
+      document.getElementById('q11-txt').innerText = t.q11;
+      document.getElementById('q12-txt').innerText = t.q12;
+
+      document.getElementById('sec-d-title').innerText = t.secD;
+      document.getElementById('q13-txt').innerText = t.q13;
+      document.getElementById('q14-txt').innerText = t.q14;
+      document.getElementById('btn-submit-txt').innerText = t.submitBtn;
+    }
 
     window.onload = async function() {
       document.getElementById('status').innerText = "Inizializzazione fotocamera in corso...";
@@ -281,7 +339,7 @@
         webgazer.showVideoPreview(true).showPredictionPoints(false);
         document.getElementById('status').innerText = "Fotocamera pronta. Inquadrati bene e clicca AVVIA TEST.";
       } catch (err) {
-        document.getElementById('status').innerText = "Errore: Consenti l'accesso alla webcam nelle impostazioni del browser.";
+        document.getElementById('status').innerText = "Errore: Consenti l'accesso alla webcam nel browser.";
       }
     };
 
@@ -298,13 +356,9 @@
       video.play().then(() => {
         startTime = performance.now();
         isTesting = true;
-      }).catch(err => {
-        alert("Errore nell'avvio del video.");
-      });
+      }).catch(err => { alert("Errore nell'avvio del video."); });
 
-      video.onended = function() {
-        stopAndShowSurvey();
-      };
+      video.onended = function() { stopAndShowSurvey(); };
     }
 
     function stopAndShowSurvey() {
@@ -312,7 +366,12 @@
       const video = document.getElementById('myVideo');
       video.pause();
 
-      try { webgazer.end(); } catch(e) {}
+      // Spegnimento definitivo webcam e arresto dello stream hardware
+      try { 
+        webgazer.end(); 
+        let mediaStream = document.querySelector('video').srcObject;
+        if(mediaStream) mediaStream.getTracks().forEach(track => track.stop());
+      } catch(e) {}
 
       document.getElementById('video-container').style.display = 'none';
       document.getElementById('survey-container').style.display = 'block';
@@ -322,47 +381,33 @@
     function submitSurvey() {
       const form = document.getElementById('surveyForm');
       if (!form.checkValidity()) {
-        alert("Per favore, rispondi a tutte le domande a scelta multipla prima di inviare.");
         form.reportValidity();
         return;
       }
 
+      document.getElementById('submit-status').innerText = "Invio dati in corso / Submitting data...";
+
       let surveyHtml = `
         <div style="font-family: Arial, sans-serif; padding: 30px; color: #222; max-width: 750px; margin: 0 auto;">
-          <div style="border-bottom: 3px solid #00a86b; padding-bottom: 10px; margin-bottom: 20px;">
-            <h1 style="color: #00a86b; margin: 0; font-size: 24px;">IDOMA - Evaluation Questionnaire Results</h1>
-            <p style="margin: 5px 0 0 0; color: #666; font-size: 13px;">Date: ${new Date().toLocaleString()}</p>
-          </div>
+          <h1 style="color: #00a86b;">IDOMA - Evaluation Survey</h1>
+          <p><strong>Date:</strong> ${new Date().toLocaleString()}</p><hr>
       `;
 
       let surveyCsv = "sep=,\nQuestion_ID,Question_Text,Answer\n";
-
       const questions = form.querySelectorAll('.question');
+      
       questions.forEach((qDiv, index) => {
-        const fullQuestionText = qDiv.getAttribute('data-q') || `Question ${index + 1}`;
+        const qText = qDiv.querySelector('p').innerText;
         const input = qDiv.querySelector('input:checked, textarea');
         const val = input ? input.value : "";
 
-        surveyHtml += `
-          <div style="margin-bottom: 18px; background: #f9f9f9; padding: 12px 15px; border-left: 4px solid #00a86b; border-radius: 4px;">
-            <p style="margin: 0 0 6px 0; font-weight: bold; font-size: 14px; color: #111;">${index + 1}. ${fullQuestionText}</p>
-            <p style="margin: 0; color: #00a86b; font-weight: bold; font-size: 14px;">▸ Answer: <span style="color: #333; font-weight: normal;">${val || 'No response'}</span></p>
-          </div>
-        `;
-
-        let cleanVal = val.replace(/"/g, '""');
-        let cleanQ = fullQuestionText.replace(/"/g, '""');
-        surveyCsv += `Q${index + 1},"${cleanQ}","${cleanVal}"\n`;
+        surveyHtml += `<p><strong>${index + 1}. ${qText}</strong><br>▸ Answer: ${val}</p>`;
+        surveyCsv += `Q${index + 1},"${qText.replace(/"/g, '""')}","${val.replace(/"/g, '""')}"\n`;
       });
-
       surveyHtml += `</div>`;
 
       let csvContent = "sep=,\nTimestamp_ms,X_pixel,Y_pixel\n";
-      gazeData.forEach(function(row) {
-        csvContent += `${row.time},${row.x},${row.y}\n`;
-      });
-
-      alert("Invio dati in corso...");
+      gazeData.forEach(function(row) { csvContent += `${row.time},${row.x},${row.y}\n`; });
 
       fetch(scriptURL, {
         method: 'POST',
@@ -371,12 +416,10 @@
         body: JSON.stringify({ csvData: csvContent, surveyCsv: surveyCsv, surveyHtml: surveyHtml })
       })
       .then(() => {
-        alert("Test e questionario completati con successo! Grazie per la partecipazione.");
-        document.getElementById('survey-container').innerHTML = "<h2 style='text-align:center;'>Grazie per aver completato il test! Puoi chiudere questa scheda.</h2>";
+        document.getElementById('survey-container').innerHTML = "<h2 style='text-align:center; color:#00a86b; margin-top:50px;'>Grazie! Il test è stato inviato ed è completato.<br><i>Thank you! The study has been successfully submitted.</i></h2>";
       })
       .catch(error => {
-        alert("Errore durante l'invio dei dati.");
-        console.error('Error:', error);
+        document.getElementById('submit-status').innerText = "Errore durante l'invio. Riprova.";
       });
     }
   </script>
