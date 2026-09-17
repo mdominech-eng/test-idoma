@@ -9,7 +9,7 @@
     #video-container { display: none; width: 100vw; height: 100vh; justify-content: center; align-items: center; position: relative; background: #000; }
     video { width: 100vw; height: 100vh; object-fit: contain; }
     
-    #intro { position: absolute; top: 15%; width: 75%; left: 12.5%; z-index: 100; background: rgba(25,25,25,0.95); padding: 35px; border-radius: 12px; box-shadow: 0 4px 25px rgba(0,0,0,0.8); }
+    #intro { position: absolute; top: 10%; width: 75%; left: 12.5%; z-index: 100; background: rgba(25,25,25,0.95); padding: 35px; border-radius: 12px; box-shadow: 0 4px 25px rgba(0,0,0,0.8); }
     
     .lang-switch { margin-bottom: 20px; }
     .lang-btn { padding: 8px 16px; font-size: 14px; cursor: pointer; background: #333; color: white; border: 1px solid #555; border-radius: 4px; margin: 0 5px; font-weight: bold; }
@@ -28,7 +28,6 @@
     input[type="radio"], input[type="text"], textarea { margin-right: 10px; }
     textarea, input[type="text"] { width: 100%; background: #121212; color: #fff; border: 1px solid #444; border-radius: 4px; padding: 12px; box-sizing: border-box; font-family: inherit; }
     
-    /* Likert Scale Grafica Chiara */
     .likert-scale { display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin-top: 15px; background: #181818; padding: 15px; border-radius: 8px; }
     .likert-node { text-align: center; flex: 1; }
     .likert-node input { margin: 0 0 6px 0; cursor: pointer; }
@@ -85,38 +84,38 @@
 
       <div class="question">
         <p id="q2-txt">2. In quale genere ti identifichi?</p>
-        <label><input type="radio" name="q_gender" value="Female" required> <span class="opt-female">Donna</span></label>
-        <label><input type="radio" name="q_gender" value="Male"> <span class="opt-male">Uomo</span></label>
-        <label><input type="radio" name="q_gender" value="Non-binary"> <span class="opt-nb">Non binario</span></label>
-        <label><input type="radio" name="q_gender" value="Prefer not to say"> <span class="opt-pnts">Preferisco non rispondere</span></label>
+        <label><input type="radio" name="q_gender" value="Female" required> <span id="opt-female">Donna</span></label>
+        <label><input type="radio" name="q_gender" value="Male"> <span id="opt-male">Uomo</span></label>
+        <label><input type="radio" name="q_gender" value="Non-binary"> <span id="opt-nb">Non binario</span></label>
+        <label><input type="radio" name="q_gender" value="Prefer not to say"> <span id="opt-pnts1">Preferisco non rispondere</span></label>
       </div>
 
       <div class="question">
         <p id="q3-txt">3. Come descriveresti la tua attuale situazione finanziaria?</p>
-        <label><input type="radio" name="q_finance" value="Low" required> <span class="opt-low">Bassa</span></label>
-        <label><input type="radio" name="q_finance" value="Lower-middle"> <span class="opt-lm">Medio-bassa</span></label>
-        <label><input type="radio" name="q_finance" value="Middle"> <span class="opt-mid">Media</span></label>
-        <label><input type="radio" name="q_finance" value="Upper-middle"> <span class="opt-um">Medio-alta</span></label>
-        <label><input type="radio" name="q_finance" value="High"> <span class="opt-high">Alta</span></label>
-        <label><input type="radio" name="q_finance" value="Prefer not to say"> <span class="opt-pnts">Preferisco non rispondere</span></label>
+        <label><input type="radio" name="q_finance" value="Low" required> <span id="opt-low">Bassa</span></label>
+        <label><input type="radio" name="q_finance" value="Lower-middle"> <span id="opt-lm">Medio-bassa</span></label>
+        <label><input type="radio" name="q_finance" value="Middle"> <span id="opt-mid">Media</span></label>
+        <label><input type="radio" name="q_finance" value="Upper-middle"> <span id="opt-um">Medio-alta</span></label>
+        <label><input type="radio" name="q_finance" value="High"> <span id="opt-high">Alta</span></label>
+        <label><input type="radio" name="q_finance" value="Prefer not to say"> <span id="opt-pnts2">Preferisco non rispondere</span></label>
       </div>
 
       <div class="question">
         <p id="q4-txt">4. Chi decide di solito l'acquisto di piccoli elettrodomestici in casa?</p>
-        <label><input type="radio" name="q_decision" value="Mainly me" required> <span class="opt-me">Principalmente io</span></label>
-        <label><input type="radio" name="q_decision" value="Together"> <span class="opt-together">Insieme ad altre persone</span></label>
-        <label><input type="radio" name="q_decision" value="Influence"> <span class="opt-infl">Influenzo la decisione, ma non decido io</span></label>
-        <label><input type="radio" name="q_decision" value="Never"> <span class="opt-never">Non prendo quasi mai parte alla decisione</span></label>
+        <label><input type="radio" name="q_decision" value="Mainly me" required> <span id="opt-me">Principalmente io</span></label>
+        <label><input type="radio" name="q_decision" value="Together"> <span id="opt-together">Insieme ad altre persone</span></label>
+        <label><input type="radio" name="q_decision" value="Influence"> <span id="opt-infl">Influenzo la decisione, ma non decido io</span></label>
+        <label><input type="radio" name="q_decision" value="Never"> <span id="opt-never">Non prendo quasi mai parte alla decisione</span></label>
       </div>
 
       <div class="question">
         <p id="q5-txt">5. Qual è la tua attuale occupazione?</p>
-        <label><input type="radio" name="q_employment" value="Employed" required> <span class="opt-emp">Occupato/a</span></label>
-        <label><input type="radio" name="q_employment" value="Looking for work"> <span class="opt-look">In cerca di occupazione</span></label>
-        <label><input type="radio" name="q_employment" value="Student"> <span class="opt-stud">Studente/ssa</span></label>
-        <label><input type="radio" name="q_employment" value="Retired"> <span class="opt-ret">Pensionato/a</span></label>
-        <label><input type="radio" name="q_employment" value="Homemaker"> <span class="opt-home">Casalingo/a o cura della casa</span></label>
-        <label><input type="radio" name="q_employment" value="Other"> <span class="opt-oth">Altro</span></label>
+        <label><input type="radio" name="q_employment" value="Employed" required> <span id="opt-emp">Occupato/a</span></label>
+        <label><input type="radio" name="q_employment" value="Looking for work"> <span id="opt-look">In cerca di occupazione</span></label>
+        <label><input type="radio" name="q_employment" value="Student"> <span id="opt-stud">Studente/ssa</span></label>
+        <label><input type="radio" name="q_employment" value="Retired"> <span id="opt-ret">Pensionato/a</span></label>
+        <label><input type="radio" name="q_employment" value="Homemaker"> <span id="opt-home">Casalingo/a o cura della casa</span></label>
+        <label><input type="radio" name="q_employment" value="Other"> <span id="opt-oth">Altro</span></label>
       </div>
 
       <!-- Section B -->
@@ -124,24 +123,24 @@
 
       <div class="question">
         <p id="q6-txt">6. In una settimana tipo, quanto spesso cucini a casa?</p>
-        <label><input type="radio" name="q_cook_freq" value="Every day" required> <span class="opt-daily">Tutti i giorni</span></label>
-        <label><input type="radio" name="q_cook_freq" value="4-6 times"> 4–6 volte a settimana</label>
-        <label><input type="radio" name="q_cook_freq" value="2-3 times"> 2–3 volte a settimana</label>
-        <label><input type="radio" name="q_cook_freq" value="Rarely"> <span class="opt-rare">Una volta a settimana o meno</span></label>
+        <label><input type="radio" name="q_cook_freq" value="Every day" required> <span id="opt-daily">Tutti i giorni</span></label>
+        <label><input type="radio" name="q_cook_freq" value="4-6 times"> 4–6 <span class="lbl-times">volte a settimana</span></label>
+        <label><input type="radio" name="q_cook_freq" value="2-3 times"> 2–3 <span class="lbl-times">volte a settimana</span></label>
+        <label><input type="radio" name="q_cook_freq" value="Rarely"> <span id="opt-rare">Una volta a settimana o meno</span></label>
       </div>
 
       <div class="question">
         <p id="q7-txt">7. Utilizzi o sei interessato/a all'uso di una friggitrice ad aria?</p>
-        <label><input type="radio" name="q_airfryer_use" value="Regularly" required> <span class="opt-af1">Sì, la uso regolarmente</span></label>
-        <label><input type="radio" name="q_airfryer_use" value="Interested"> <span class="opt-af2">No, ma sono molto interessato/a</span></label>
-        <label><input type="radio" name="q_airfryer_use" value="Not interested"> <span class="opt-af3">No e non sono interessato/a</span></label>
+        <label><input type="radio" name="q_airfryer_use" value="Regularly" required> <span id="opt-af1">Sì, la uso regolarmente</span></label>
+        <label><input type="radio" name="q_airfryer_use" value="Interested"> <span id="opt-af2">No, ma sono molto interessato/a</span></label>
+        <label><input type="radio" name="q_airfryer_use" value="Not interested"> <span id="opt-af3">No e non sono interessato/a</span></label>
       </div>
 
       <div class="question">
         <p id="q8-txt">8. Quanto è importante il prezzo nella scelta di un elettrodomestico?</p>
-        <label><input type="radio" name="q_price_imp" value="Low" required> <span class="opt-p1">Poco importante</span></label>
-        <label><input type="radio" name="q_price_imp" value="Medium"> <span class="opt-p2">Abbastanza importante</span></label>
-        <label><input type="radio" name="q_price_imp" value="High"> <span class="opt-p3">Molto importante</span></label>
+        <label><input type="radio" name="q_price_imp" value="Low" required> <span id="opt-p1">Poco importante</span></label>
+        <label><input type="radio" name="q_price_imp" value="Medium"> <span id="opt-p2">Abbastanza importante</span></label>
+        <label><input type="radio" name="q_price_imp" value="High"> <span id="opt-p3">Molto importante</span></label>
       </div>
 
       <!-- Section C -->
@@ -158,7 +157,7 @@
           <div class="likert-node"><input type="radio" name="q_sust_imp" value="6"><br><label>6</label></div>
           <div class="likert-node"><input type="radio" name="q_sust_imp" value="7"><br><label>7</label></div>
         </div>
-        <div class="likert-labels"><span class="lbl-low">Per nulla importante</span><span class="lbl-high">Estremamente importante</span></div>
+        <div class="likert-labels"><span id="lbl-low">Per nulla importante</span><span id="lbl-high">Estremamente importante</span></div>
       </div>
 
       <div class="question">
@@ -172,7 +171,7 @@
           <div class="likert-node"><input type="radio" name="q_design" value="6"><br><label>6</label></div>
           <div class="likert-node"><input type="radio" name="q_design" value="7"><br><label>7</label></div>
         </div>
-        <div class="likert-labels"><span class="lbl-d1">Poco attraente</span><span class="lbl-d2">Molto attraente e moderno</span></div>
+        <div class="likert-labels"><span id="lbl-d1">Poco attraente</span><span id="lbl-d2">Molto attraente e moderno</span></div>
       </div>
 
       <div class="question">
@@ -186,7 +185,7 @@
           <div class="likert-node"><input type="radio" name="q_innovation" value="6"><br><label>6</label></div>
           <div class="likert-node"><input type="radio" name="q_innovation" value="7"><br><label>7</label></div>
         </div>
-        <div class="likert-labels"><span class="lbl-i1">Per nulla utili/innovative</span><span class="lbl-i2">Estremamente utili/innovative</span></div>
+        <div class="likert-labels"><span id="lbl-i1">Per nulla utili/innovative</span><span id="lbl-i2">Estremamente utili/innovative</span></div>
       </div>
 
       <div class="question">
@@ -200,14 +199,36 @@
           <div class="likert-node"><input type="radio" name="q_credibility" value="6"><br><label>6</label></div>
           <div class="likert-node"><input type="radio" name="q_credibility" value="7"><br><label>7</label></div>
         </div>
-        <div class="likert-labels"><span class="lbl-c1">Per nulla credibile</span><span class="lbl-c2">Altamente credibile</span></div>
+        <div class="likert-labels"><span id="lbl-c1">Per nulla credibile</span><span id="lbl-c2">Altamente credibile</span></div>
       </div>
 
       <!-- Section D -->
-      <div class="section-title" id="sec-d-title">Sezione D — Prezzo & Feedback</div>
+      <div class="section-title" id="sec-d-title">Sezione D — Valutazione Comunicazione & Prezzo</div>
 
       <div class="question">
-        <p id="q13-txt">13. In quale fascia di prezzo riterresti PLAUSIBILE questo prodotto?</p>
+        <p id="q13-txt">13. Quanto è risultata chiara e comprensibile la spiegazione del prodotto attraverso il video?</p>
+        <div class="likert-scale">
+          <div class="likert-node"><input type="radio" name="q_video_comp" value="1" required><br><label>1</label></div>
+          <div class="likert-node"><input type="radio" name="q_video_comp" value="2"><br><label>2</label></div>
+          <div class="likert-node"><input type="radio" name="q_video_comp" value="3"><br><label>3</label></div>
+          <div class="likert-node"><input type="radio" name="q_video_comp" value="4"><br><label>4</label></div>
+          <div class="likert-node"><input type="radio" name="q_video_comp" value="5"><br><label>5</label></div>
+          <div class="likert-node"><input type="radio" name="q_video_comp" value="6"><br><label>6</label></div>
+          <div class="likert-node"><input type="radio" name="q_video_comp" value="7"><br><label>7</label></div>
+        </div>
+        <div class="likert-labels"><span id="lbl-v1">Per nulla chiara</span><span id="lbl-v2">Estremamente chiara</span></div>
+      </div>
+
+      <div class="question">
+        <p id="q14-txt">14. Quale elemento ti ha aiutato maggiormente a comprendere il funzionamento del prodotto?</p>
+        <label><input type="radio" name="q_primary_help" value="Video Animation" required> <span id="opt-h1">L'animazione 3D e le immagini del video</span></label>
+        <label><input type="radio" name="q_primary_help" value="Text Overlays"> <span id="opt-h2">Le scritte sovraimpresse in inglese</span></label>
+        <label><input type="radio" name="q_primary_help" value="Voiceover"> <span id="opt-h3">La voce narrante in italiano</span></label>
+        <label><input type="radio" name="q_primary_help" value="Combination"> <span id="opt-h4">L'insieme coordinato di tutti gli elementi</span></label>
+      </div>
+
+      <div class="question">
+        <p id="q15-txt">15. In quale fascia di prezzo riterresti PLAUSIBILE questo prodotto?</p>
         <label><input type="radio" name="q_price_range" value="<100" required> Less than 100 € / Meno di 100 €</label>
         <label><input type="radio" name="q_price_range" value="100-149"> 100 € – 149 €</label>
         <label><input type="radio" name="q_price_range" value="150-199"> 150 € – 199 €</label>
@@ -216,8 +237,8 @@
       </div>
 
       <div class="question">
-        <p id="q14-txt">14. Quali aspetti del prodotto ti hanno colpito di più o sollevato dubbi?</p>
-        <textarea name="q_open_feedback" rows="4" placeholder="Scrivi qui la tua risposta opzionale..."></textarea>
+        <p id="q16-txt">16. C'è qualche funzionalità, dettaglio o aspetto del prodotto che vorresti vedere modificato o spiegato meglio?</p>
+        <textarea name="q_open_suggestions" rows="3" placeholder="Scrivi qui eventuali suggerimenti o dubbi specifici..."></textarea>
       </div>
 
       <button type="button" class="btn-submit" id="btn-submit-txt" onclick="submitSurvey()">INVIA E CONCLUDI IL TEST</button>
@@ -256,10 +277,25 @@
         q10: "10. Come valuti il DESIGN ESTETICO del prototipo IDOMA?",
         q11: "11. Quanto ritieni INNOVATIVE ed UTILI le funzioni tecniche (scambiatore di calore, doppio cestello 3.5L/6L)?",
         q12: "12. Quanto trovi CREDIBILE la promessa di risparmio energetico e sostenibilità del prodotto?",
-        secD: "Sezione D — Prezzo & Feedback",
-        q13: "13. In quale fascia di prezzo riterresti PLAUSIBILE questo prodotto?",
-        q14: "14. Quali aspetti del prodotto ti hanno colpito di più o sollevato dubbi?",
-        submitBtn: "INVIA E CONCLUDI IL TEST"
+        secD: "Sezione D — Valutazione Comunicazione & Prezzo",
+        q13: "13. Quanto è risultata chiara e comprensibile la spiegazione del prodotto attraverso il video?",
+        q14: "14. Quale elemento ti ha aiutato maggiormente a comprendere il funzionamento del prodotto?",
+        q15: "15. In quale fascia di prezzo riterresti PLAUSIBILE questo prodotto?",
+        q16: "16. C'è qualche funzionalità, dettaglio o aspetto del prodotto che vorresti vedere modificato o spiegato meglio?",
+        submitBtn: "INVIA E CONCLUDI IL TEST",
+        optFemale: "Donna", optMale: "Uomo", optNb: "Non binario", optPnts: "Preferisco non rispondere",
+        optLow: "Bassa", optLm: "Medio-bassa", optMid: "Media", optUm: "Medio-alta", optHigh: "Alta",
+        optMe: "Principalmente io", optTogether: "Insieme ad altre persone", optInfl: "Influenzo la decisione, ma non decido io", optNever: "Non prendo quasi mai parte alla decisione",
+        optEmp: "Occupato/a", optLook: "In cerca di occupazione", optStud: "Studente/ssa", optRet: "Pensionato/a", optHome: "Casalingo/a o cura della casa", optOth: "Altro",
+        optDaily: "Tutti i giorni", optRare: "Una volta a settimana o meno",
+        optAf1: "Sì, la uso regolarmente", optAf2: "No, ma sono molto interessato/a", optAf3: "No e non sono interessato/a",
+        optP1: "Poco importante", optP2: "Abbastanza importante", optP3: "Molto importante",
+        lblLow: "Per nulla importante", lblHigh: "Estremamente importante",
+        lblD1: "Poco attraente", lblD2: "Molto attraente e moderno",
+        lblI1: "Per nulla utili/innovative", lblI2: "Estremamente utili/innovative",
+        lblC1: "Per nulla credibile", lblC2: "Altamente credibile",
+        lblV1: "Per nulla chiara", lblV2: "Estremamente chiara",
+        optH1: "L'animazione 3D e le immagini del video", optH2: "Le scritte sovraimpresse in inglese", optH3: "La voce narrante in italiano", optH4: "L'insieme coordinato di tutti gli elementi"
       },
       en: {
         title: "Eye Tracking Study - IDOMA",
@@ -283,10 +319,25 @@
         q10: "10. How do you rate the AESTHETIC DESIGN of the IDOMA prototype?",
         q11: "11. How INNOVATIVE and USEFUL do you find the technical features (heat exchanger, dual 3.5L/6L baskets)?",
         q12: "12. How CREDIBLE do you find the product's energy savings and sustainability claims?",
-        secD: "Section D — Price & Feedback",
-        q13: "13. In which price range would you consider this product PLAUSIBLE?",
-        q14: "14. Which aspects of the product stood out to you most or raised doubts?",
-        submitBtn: "SUBMIT & COMPLETE STUDY"
+        secD: "Section D — Communication & Price Evaluation",
+        q13: "13. How clear and easy to understand was the product explanation through the video?",
+        q14: "14. Which element helped you the most in understanding how the product works?",
+        q15: "15. In which price range would you consider this product PLAUSIBLE?",
+        q16: "16. Is there any product feature or detail you would like to see modified or explained better?",
+        submitBtn: "SUBMIT & COMPLETE STUDY",
+        optFemale: "Female", optMale: "Male", optNb: "Non-binary", optPnts: "Prefer not to say",
+        optLow: "Low", optLm: "Lower-middle", optMid: "Middle", optUm: "Upper-middle", optHigh: "High",
+        optMe: "Mainly me", optTogether: "Together with others", optInfl: "I influence the decision", optNever: "I rarely take part",
+        optEmp: "Employed", optLook: "Looking for work", optStud: "Student", optRet: "Retired", optHome: "Homemaker", optOth: "Other",
+        optDaily: "Every day", optRare: "Once a week or less",
+        optAf1: "Yes, I use it regularly", optAf2: "No, but I am very interested", optAf3: "No and not interested",
+        optP1: "Not very important", optP2: "Fairly important", optP3: "Very important",
+        lblLow: "Not important at all", lblHigh: "Extremely important",
+        lblD1: "Unattractive", lblD2: "Very attractive & modern",
+        lblI1: "Not useful/innovative", lblI2: "Extremely useful/innovative",
+        lblC1: "Not credible at all", lblC2: "Highly credible",
+        lblV1: "Not clear at all", lblV2: "Extremely clear",
+        optH1: "The 3D video animation and visuals", optH2: "The English text overlays", optH3: "The Italian voiceover narration", optH4: "The coordinated combination of all elements"
       }
     };
 
@@ -324,7 +375,60 @@
       document.getElementById('sec-d-title').innerText = t.secD;
       document.getElementById('q13-txt').innerText = t.q13;
       document.getElementById('q14-txt').innerText = t.q14;
+      document.getElementById('q15-txt').innerText = t.q15;
+      document.getElementById('q16-txt').innerText = t.q16;
       document.getElementById('btn-submit-txt').innerText = t.submitBtn;
+
+      document.getElementById('opt-female').innerText = t.optFemale;
+      document.getElementById('opt-male').innerText = t.optMale;
+      document.getElementById('opt-nb').innerText = t.optNb;
+      document.getElementById('opt-pnts1').innerText = t.optPnts;
+      document.getElementById('opt-pnts2').innerText = t.optPnts;
+
+      document.getElementById('opt-low').innerText = t.optLow;
+      document.getElementById('opt-lm').innerText = t.optLm;
+      document.getElementById('opt-mid').innerText = t.optMid;
+      document.getElementById('opt-um').innerText = t.optUm;
+      document.getElementById('opt-high').innerText = t.optHigh;
+
+      document.getElementById('opt-me').innerText = t.optMe;
+      document.getElementById('opt-together').innerText = t.optTogether;
+      document.getElementById('opt-infl').innerText = t.optInfl;
+      document.getElementById('opt-never').innerText = t.optNever;
+
+      document.getElementById('opt-emp').innerText = t.optEmp;
+      document.getElementById('opt-look').innerText = t.optLook;
+      document.getElementById('opt-stud').innerText = t.optStud;
+      document.getElementById('opt-ret').innerText = t.optRet;
+      document.getElementById('opt-home').innerText = t.optHome;
+      document.getElementById('opt-oth').innerText = t.optOth;
+
+      document.getElementById('opt-daily').innerText = t.optDaily;
+      document.getElementById('opt-rare').innerText = t.optRare;
+
+      document.getElementById('opt-af1').innerText = t.optAf1;
+      document.getElementById('opt-af2').innerText = t.optAf2;
+      document.getElementById('opt-af3').innerText = t.optAf3;
+
+      document.getElementById('opt-p1').innerText = t.optP1;
+      document.getElementById('opt-p2').innerText = t.optP2;
+      document.getElementById('opt-p3').innerText = t.optP3;
+
+      document.getElementById('lbl-low').innerText = t.lblLow;
+      document.getElementById('lbl-high').innerText = t.lblHigh;
+      document.getElementById('lbl-d1').innerText = t.lblD1;
+      document.getElementById('lbl-d2').innerText = t.lblD2;
+      document.getElementById('lbl-i1').innerText = t.lblI1;
+      document.getElementById('lbl-i2').innerText = t.lblI2;
+      document.getElementById('lbl-c1').innerText = t.lblC1;
+      document.getElementById('lbl-c2').innerText = t.lblC2;
+      document.getElementById('lbl-v1').innerText = t.lblV1;
+      document.getElementById('lbl-v2').innerText = t.lblV2;
+
+      document.getElementById('opt-h1').innerText = t.optH1;
+      document.getElementById('opt-h2').innerText = t.optH2;
+      document.getElementById('opt-h3').innerText = t.optH3;
+      document.getElementById('opt-h4').innerText = t.optH4;
     }
 
     window.onload = async function() {
@@ -366,12 +470,17 @@
       const video = document.getElementById('myVideo');
       video.pause();
 
-      // Spegnimento definitivo webcam e arresto dello stream hardware
+      // Spegnimento definitivo della webcam e rilascio risorse del browser
       try { 
-        webgazer.end(); 
-        let mediaStream = document.querySelector('video').srcObject;
-        if(mediaStream) mediaStream.getTracks().forEach(track => track.stop());
-      } catch(e) {}
+        if (typeof webgazer !== 'undefined') {
+          webgazer.end(); 
+        }
+        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+          stream.getTracks().forEach(track => track.stop());
+        }).catch(e => console.log(e));
+      } catch(e) {
+        console.log("Webcam shutdown handling:", e);
+      }
 
       document.getElementById('video-container').style.display = 'none';
       document.getElementById('survey-container').style.display = 'block';
