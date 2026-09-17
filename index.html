@@ -9,9 +9,21 @@
     #video-container { display: none; width: 100vw; height: 100vh; justify-content: center; align-items: center; position: relative; background: #000; }
     video { width: 100vw; height: 100vh; object-fit: contain; }
     
-    #intro { position: absolute; top: 10%; width: 75%; left: 12.5%; z-index: 100; background: rgba(25,25,25,0.95); padding: 35px; border-radius: 12px; box-shadow: 0 4px 25px rgba(0,0,0,0.8); }
+    /* Posizionato a destra per lasciare totalmente libero l'angolo in alto a sinistra per la webcam */
+    #intro { 
+      position: absolute; 
+      top: 20%; 
+      left: 38%; 
+      width: 58%; 
+      z-index: 100; 
+      background: rgba(25,25,25,0.95); 
+      padding: 30px; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 25px rgba(0,0,0,0.8); 
+      text-align: left;
+    }
     
-    .lang-switch { margin-bottom: 20px; }
+    .lang-switch { margin-bottom: 20px; text-align: right; }
     .lang-btn { padding: 8px 16px; font-size: 14px; cursor: pointer; background: #333; color: white; border: 1px solid #555; border-radius: 4px; margin: 0 5px; font-weight: bold; }
     .lang-btn.active { background: #00a86b; border-color: #00a86b; }
 
@@ -44,18 +56,18 @@
       <button class="lang-btn" onclick="setLanguage('en')">English</button>
     </div>
 
-    <h1 id="txt-title">Test di Tracciamento Oculare - IDOMA</h1>
-    <p id="txt-desc" style="font-size: 15px; line-height: 1.6; color: #ddd;">
-      Benvenuto/a nello studio sul prototipo di elettrodomestico <strong>IDOMA</strong>.<br>
-      Guarda il video di presentazione normalmente, come se stessi osservando la pubblicità di un nuovo prodotto.<br><br>
-      <strong style="color: #00a86b;">Informativa sulla Privacy & Tracciamento:</strong><br>
-      • Il sistema rileva <u>esclusivamente le coordinate del tuo sguardo</u> sullo schermo per fini scientifici.<br>
-      • <u>Nessuna immagine o video del tuo volto viene registrato o salvato</u> in alcun modo.<br>
-      • Tutte le risposte al questionario finale sono completamente anonime.<br>
-      • È richiesto l'uso di un Computer/PC con fotocamera attiva e ambiente ben illuminato.
+    <h1 id="txt-title" style="margin-top:0;">Test di Tracciamento Oculare - IDOMA</h1>
+    <p id="txt-desc" style="font-size: 14px; line-height: 1.5; color: #ddd;">
+      Benvenuto/a nello studio sul prototipo <strong>IDOMA</strong>.<br>
+      Guarda il video di presentazione normalmente, come se stessi osservando una pubblicità.<br><br>
+      <strong style="color: #00a86b;">Informativa sulla Privacy:</strong><br>
+      • Il sistema rileva <u>esclusivamente le coordinate dello sguardo</u> sullo schermo.<br>
+      • <u>Nessuna immagine del tuo volto viene salvata</u>.<br>
+      • Risposte al questionario 100% anonime.<br>
+      • Usa un PC con fotocamera inquadrata in un ambiente ben illuminato.
     </p>
     <button class="btn-start" id="txt-startbtn" onclick="startTest()">AVVIA IL TEST</button>
-    <div id="status" style="margin-top: 15px; color: #aaa;"></div>
+    <div id="status" style="margin-top: 15px; color: #aaa; font-size: 13px;"></div>
   </div>
 
   <!-- Video Container -->
@@ -257,7 +269,7 @@
     const translations = {
       it: {
         title: "Test di Tracciamento Oculare - IDOMA",
-        desc: "Benvenuto/a nello studio sul prototipo di elettrodomestico <strong>IDOMA</strong>.<br>Guarda il video di presentazione normalmente, come se stessi osservando la pubblicità di un nuovo prodotto.<br><br><strong style='color: #00a86b;'>Informativa sulla Privacy & Tracciamento:</strong><br>• Il sistema rileva <u>esclusivamente le coordinate del tuo sguardo</u> sullo schermo per fini scientifici.<br>• <u>Nessuna immagine o video del tuo volto viene registrato o salvato</u> in alcun modo.<br>• Tutte le risposte al questionario finale sono completamente anonime.<br>• È richiesto l'uso di un Computer/PC con fotocamera attiva e ambiente ben illuminato.",
+        desc: "Benvenuto/a nello studio sul prototipo <strong>IDOMA</strong>.<br>Guarda il video di presentazione normalmente, come se stessi osservando una pubblicità.<br><br><strong style='color: #00a86b;'>Informativa sulla Privacy:</strong><br>• Il sistema rileva <u>esclusivamente le coordinate dello sguardo</u> sullo schermo.<br>• <u>Nessuna immagine del tuo volto viene salvata</u>.<br>• Risposte al questionario 100% anonime.<br>• Usa un PC con fotocamera inquadrata in un ambiente ben illuminato.",
         startBtn: "AVVIA IL TEST",
         stopBtn: "TERMINA E VAI AL QUESTIONARIO",
         surveyTitle: "Questionario di Valutazione Concept IDOMA",
@@ -299,7 +311,7 @@
       },
       en: {
         title: "Eye Tracking Study - IDOMA",
-        desc: "Welcome to the <strong>IDOMA</strong> appliance prototype research study.<br>Please watch the presentation video naturally, as if you were viewing a commercial for a new product.<br><br><strong style='color: #00a86b;'>Privacy & Tracking Information:</strong><br>• The system <u>exclusively tracks your gaze coordinates</u> on screen for research purposes.<br>• <u>No images or video of your face are recorded or saved</u> under any circumstances.<br>• All responses in the final questionnaire are completely anonymous.<br>• Please use a Desktop/Laptop PC with an active camera in a well-lit room.",
+        desc: "Welcome to the <strong>IDOMA</strong> research study.<br>Watch the presentation video naturally as if viewing a commercial.<br><br><strong style='color: #00a86b;'>Privacy Notice:</strong><br>• The system <u>only tracks gaze coordinates</u> on screen.<br>• <u>No face video or images are stored</u>.<br>• Questionnaire responses are 100% anonymous.<br>• Please use a PC with a camera in a well-lit room.",
         startBtn: "START TEST",
         stopBtn: "END VIDEO & GO TO QUESTIONNAIRE",
         surveyTitle: "IDOMA Concept Evaluation Questionnaire",
@@ -470,18 +482,41 @@
       const video = document.getElementById('myVideo');
       video.pause();
 
-      // Spegnimento definitivo della webcam e rilascio risorse del browser
+      // 1. Arresta l'algoritmo di tracciamento WebGazer
       try { 
         if (typeof webgazer !== 'undefined') {
-          webgazer.end(); 
+          webgazer.pause();
+          webgazer.end();
         }
-        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-          stream.getTracks().forEach(track => track.stop());
-        }).catch(e => console.log(e));
+      } catch(e) { console.log(e); }
+
+      // 2. Interruzione fisica dello stream hardware e spegnimento del LED
+      try {
+        let wgVideo = document.getElementById('webgazerVideoFeed');
+        if (wgVideo) {
+          if (wgVideo.srcObject) {
+            wgVideo.srcObject.getTracks().forEach(track => {
+              track.stop();
+              track.enabled = false;
+            });
+          }
+          wgVideo.remove();
+        }
+
+        let wgContainer = document.getElementById('webgazerVideoContainer');
+        if (wgContainer) { wgContainer.remove(); }
+
+        // Spegne ogni traccia residua attiva su mediaDevices
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+            stream.getTracks().forEach(track => track.stop());
+          }).catch(e => {});
+        }
       } catch(e) {
-        console.log("Webcam shutdown handling:", e);
+        console.log("Arresto fotocamera:", e);
       }
 
+      // 3. Transizione alla schermata del questionario
       document.getElementById('video-container').style.display = 'none';
       document.getElementById('survey-container').style.display = 'block';
       window.scrollTo(0,0);
