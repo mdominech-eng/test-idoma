@@ -40,6 +40,31 @@
       margin-bottom: 20px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
+    .eyetracking-wrapper {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .webcam-container {
+      width: 320px;
+      height: 240px;
+      background-color: #000;
+      border: 2px solid #333;
+      border-radius: 8px;
+      position: relative;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    /* Placeholder per la fotocamera/canvas di WebGazer */
+    #webgazerVideoContainer, video, canvas {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover;
+    }
+    .instructions-content {
+      flex-grow: 1;
+    }
     h2 { margin-top: 0; }
     ul { padding-left: 20px; }
     li { margin-bottom: 8px; }
@@ -53,11 +78,13 @@
       border-radius: 6px;
       cursor: pointer;
       margin-top: 15px;
+      width: 100%;
     }
     .status-text {
       color: #00b060;
       font-size: 14px;
       margin-top: 10px;
+      text-align: center;
     }
     .question-title {
       font-size: 18px;
@@ -89,6 +116,18 @@
       box-sizing: border-box;
       resize: vertical;
     }
+    /* Nasconde il questionario all'avvio */
+    #questionnaire-section {
+      display: none;
+    }
+    @media (max-width: 650px) {
+      .eyetracking-wrapper {
+        flex-direction: column;
+      }
+      .webcam-container {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -101,98 +140,110 @@
     <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">English</button>
   </div>
 
-  <!-- SEZIONE ISTRUZIONI EYE TRACKING -->
-  <div class="card">
-    <h2 data-it="Test di Tracciamento Oculare - IDOMA" data-en="Eye Tracking Test - IDOMA">Test di Tracciamento Oculare - IDOMA</h2>
-    <p data-it="Benvenuto/a nello studio sul prototipo IDOMA." data-en="Welcome to the study on the IDOMA prototype.">Benvenuto/a nello studio sul prototipo IDOMA.</p>
-    <p data-it="Guarda il video di presentazione normalmente, come se stessi osservando una pubblicità." data-en="Watch the presentation video normally, as if you were watching an advertisement.">Guarda il video di presentazione normalmente, come se stessi osservando una pubblicità.</p>
+  <!-- SEZIONE ISTRUZIONI E WEBCAM -->
+  <div class="card" id="intro-card">
+    <div class="eyetracking-wrapper">
+      
+      <!-- Riquadro Fotocamera -->
+      <div class="webcam-container" id="webcam-box">
+        <!-- WebGazer / Canvas della fotocamera viene inserito qui -->
+      </div>
 
-    <p style="font-weight: bold; color: #00b060;" data-it="Informativa sulla Privacy:" data-en="Privacy Policy:">Informativa sulla Privacy:</p>
-    <ul>
-      <li data-it="Prima di cliccare su AVVIA IL TEST, attendi qualche secondo che il riquadro attorno al tuo volto diventi verde e compaiano i punti di tracciamento sul viso." data-en="Before clicking START TEST, please wait a few seconds for the box around your face to turn green and for the tracking dots to appear on your face.">Prima di cliccare su AVVIA IL TEST, attendi qualche secondo che il riquadro attorno al tuo volto diventi verde e compaiano i punti di tracciamento sul viso.</li>
-      <li data-it="Il sistema rileva esclusivamente le coordinate dello sguardo sullo schermo." data-en="The system exclusively detects gaze coordinates on the screen.">Il sistema rileva esclusivamente le coordinate dello sguardo sullo schermo.</li>
-      <li data-it="Nessuna immagine del tuo volto viene salvata." data-en="No image of your face is saved.">Nessuna immagine del tuo volto viene salvata.</li>
-      <li data-it="Risposte al questionario 100% anonime." data-en="Questionnaire responses are 100% anonymous.">Risposte al questionario 100% anonime.</li>
-      <li data-it="Usa un PC con fotocamera inquadrata in un ambiente ben illuminato." data-en="Use a PC with a camera facing you in a well-lit environment.">Usa un PC con fotocamera inquadrata in un ambiente ben illuminato.</li>
-    </ul>
+      <!-- Testi di Istruzione -->
+      <div class="instructions-content">
+        <h2 data-it="Test di Tracciamento Oculare - IDOMA" data-en="Eye Tracking Test - IDOMA">Test di Tracciamento Oculare - IDOMA</h2>
+        <p data-it="Benvenuto/a nello studio sul prototipo IDOMA." data-en="Welcome to the study on the IDOMA prototype.">Benvenuto/a nello studio sul prototipo IDOMA.</p>
+        <p data-it="Guarda il video di presentazione normalmente, come se stessi osservando una pubblicità." data-en="Watch the presentation video normally, as if you were watching an advertisement.">Guarda il video di presentazione normalmente, come se stessi osservando una pubblicità.</p>
 
-    <button class="btn-start" id="start-btn" data-it="AVVIA IL TEST" data-en="START TEST" onclick="startTest()">AVVIA IL TEST</button>
-    <p class="status-text" data-it="Fotocamera pronta. Inquadrati bene e clicca AVVIA IL TEST." data-en="Camera ready. Frame yourself well and click START TEST.">Fotocamera pronta. Inquadrati bene e clicca AVVIA IL TEST.</p>
-  </div>
+        <p style="font-weight: bold; color: #00b060;" data-it="Informativa sulla Privacy:" data-en="Privacy Policy:">Informativa sulla Privacy:</p>
+        <ul>
+          <li data-it="Prima di cliccare su AVVIA IL TEST, attendi qualche secondo che il riquadro attorno al tuo volto diventi verde e compaiano i punti di tracciamento sul viso." data-en="Before clicking START TEST, please wait a few seconds for the box around your face to turn green and for the tracking dots to appear on your face.">Prima di cliccare su AVVIA IL TEST, attendi qualche secondo che il riquadro attorno al tuo volto diventi verde e compaiano i punti di tracciamento sul viso.</li>
+          <li data-it="Il sistema rileva esclusivamente le coordinate dello sguardo sullo schermo." data-en="The system exclusively detects gaze coordinates on the screen.">Il sistema rileva esclusivamente le coordinate dello sguardo sullo schermo.</li>
+          <li data-it="Nessuna immagine del tuo volto viene salvata." data-en="No image of your face is saved.">Nessuna immagine del tuo volto viene salvata.</li>
+          <li data-it="Risposte al questionario 100% anonime." data-en="Questionnaire responses are 100% anonymous.">Risposte al questionario 100% anonime.</li>
+          <li data-it="Usa un PC con fotocamera inquadrata in un ambiente ben illuminato." data-en="Use a PC with a camera facing you in a well-lit environment.">Usa un PC con fotocamera inquadrata in un ambiente ben illuminato.</li>
+        </ul>
 
-  <!-- SEZIONE QUESTIONARIO: DOMANDE 15, 16, 17 -->
+        <button class="btn-start" id="start-btn" data-it="AVVIA IL TEST" data-en="START TEST" onclick="startTest()">AVVIA IL TEST</button>
+        <p class="status-text" data-it="Fotocamera pronta. Inquadrati bene e clicca AVVIA IL TEST." data-en="Camera ready. Frame yourself well and click START TEST.">Fotocamera pronta. Inquadrati bene e clicca AVVIA IL TEST.</p>
+      </div>
 
-  <!-- Domanda 15 -->
-  <div class="card">
-    <label class="question-title" data-it="15. Saresti propenso/a all'acquisto di questo prodotto?" data-en="15. Would you be inclined to purchase this product?">15. Saresti propenso/a all'acquisto di questo prodotto?</label>
-    <div class="options-group">
-      <label class="option-label">
-        <input type="radio" name="q15_purchase_intent" value="Yes, absolutely" required>
-        <span data-it="Sì, assolutamente" data-en="Yes, absolutely">Sì, assolutamente</span>
-      </label>
-      <label class="option-label">
-        <input type="radio" name="q15_purchase_intent" value="Probably yes">
-        <span data-it="Probabilmente sì" data-en="Probably yes">Probabilmente sì</span>
-      </label>
-      <label class="option-label">
-        <input type="radio" name="q15_purchase_intent" value="I don't know / Undecided">
-        <span data-it="Non lo so / Indeciso/a" data-en="I don't know / Undecided">Non lo so / Indeciso/a</span>
-      </label>
-      <label class="option-label">
-        <input type="radio" name="q15_purchase_intent" value="No, probably not">
-        <span data-it="No, probabilmente no" data-en="No, probably not">No, probabilmente no</span>
-      </label>
     </div>
   </div>
 
-  <!-- Domanda 16 -->
-  <div class="card">
-    <label class="question-title" data-it="16. In quale fascia di prezzo riterresti PLAUSIBILE questo prodotto?" data-en="16. What price range would you consider PLAUSIBLE for this product?">16. In quale fascia di prezzo riterresti PLAUSIBILE questo prodotto?</label>
-    <div class="options-group">
-      <label class="option-label">
-        <input type="radio" name="q16_price_range" value="Less than 100 €" required>
-        <span data-it="Meno di 100 €" data-en="Less than 100 €">Meno di 100 €</span>
-      </label>
-      <label class="option-label">
-        <input type="radio" name="q16_price_range" value="100 € – 149 €">
-        <span>100 € – 149 €</span>
-      </label>
-      <label class="option-label">
-        <input type="radio" name="q16_price_range" value="150 € – 199 €">
-        <span>150 € – 199 €</span>
-      </label>
-      <label class="option-label">
-        <input type="radio" name="q16_price_range" value="200 € – 249 €">
-        <span>200 € – 249 €</span>
-      </label>
-      <label class="option-label">
-        <input type="radio" name="q16_price_range" value="250 € or more">
-        <span data-it="250 € o più" data-en="250 € or more">250 € o più</span>
-      </label>
-    </div>
-  </div>
+  <!-- SEZIONE QUESTIONARIO (Nascosta inizialmente) -->
+  <div id="questionnaire-section">
 
-  <!-- Domanda 17 -->
-  <div class="card">
-    <label class="question-title" data-it="17. C'è qualche funzionalità, dettaglio o aspetto del prodotto che vorresti vedere modificato o spiegato meglio?" data-en="17. Is there any feature, detail, or aspect of the product that you would like to see modified or explained better?">17. C'è qualche funzionalità, dettaglio o aspetto del prodotto che vorresti vedere modificato o spiegato meglio?</label>
-    <textarea id="q17_feedback" name="q17_feedback" rows="4" placeholder="Scrivi qui eventuali suggerimenti o dubbi specifici..." data-it-placeholder="Scrivi qui eventuali suggerimenti o dubbi specifici..." data-en-placeholder="Write any suggestions or specific questions here..."></textarea>
+    <!-- Domanda 15 -->
+    <div class="card">
+      <label class="question-title" data-it="15. Saresti propenso/a all'acquisto di questo prodotto?" data-en="15. Would you be inclined to purchase this product?">15. Saresti propenso/a all'acquisto di questo prodotto?</label>
+      <div class="options-group">
+        <label class="option-label">
+          <input type="radio" name="q15_purchase_intent" value="Yes, absolutely" required>
+          <span data-it="Sì, assolutamente" data-en="Yes, absolutely">Sì, assolutamente</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q15_purchase_intent" value="Probably yes">
+          <span data-it="Probabilmente sì" data-en="Probably yes">Probabilmente sì</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q15_purchase_intent" value="I don't know / Undecided">
+          <span data-it="Non lo so / Indeciso/a" data-en="I don't know / Undecided">Non lo so / Indeciso/a</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q15_purchase_intent" value="No, probably not">
+          <span data-it="No, probabilmente no" data-en="No, probably not">No, probabilmente no</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Domanda 16 -->
+    <div class="card">
+      <label class="question-title" data-it="16. In quale fascia di prezzo riterresti PLAUSIBILE questo prodotto?" data-en="16. What price range would you consider PLAUSIBLE for this product?">16. In quale fascia di prezzo riterresti PLAUSIBILE questo prodotto?</label>
+      <div class="options-group">
+        <label class="option-label">
+          <input type="radio" name="q16_price_range" value="Less than 100 €" required>
+          <span data-it="Meno di 100 €" data-en="Less than 100 €">Meno di 100 €</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q16_price_range" value="100 € – 149 €">
+          <span>100 € – 149 €</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q16_price_range" value="150 € – 199 €">
+          <span>150 € – 199 €</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q16_price_range" value="200 € – 249 €">
+          <span>200 € – 249 €</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q16_price_range" value="250 € or more">
+          <span data-it="250 € o più" data-en="250 € or more">250 € o più</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Domanda 17 -->
+    <div class="card">
+      <label class="question-title" data-it="17. C'è qualche funzionalità, dettaglio o aspetto del prodotto che vorresti vedere modificato o spiegato meglio?" data-en="17. Is there any feature, detail, or aspect of the product that you would like to see modified or explained better?">17. C'è qualche funzionalità, dettaglio o aspetto del prodotto che vorresti vedere modificato o spiegato meglio?</label>
+      <textarea id="q17_feedback" name="q17_feedback" rows="4" placeholder="Scrivi qui eventuali suggerimenti o dubbi specifici..." data-it-placeholder="Scrivi qui eventuali suggerimenti o dubbi specifici..." data-en-placeholder="Write any suggestions or specific questions here..."></textarea>
+    </div>
+
   </div>
 
 </div>
 
 <script>
   function setLanguage(lang) {
-    // Aggiorna lo stato dei pulsanti lingua
     document.getElementById('btn-it').classList.toggle('active', lang === 'it');
     document.getElementById('btn-en').classList.toggle('active', lang === 'en');
 
-    // Traduzione di tutti gli elementi con attributi data-it e data-en
     const elements = document.querySelectorAll('[data-it][data-en]');
     elements.forEach(el => {
       el.textContent = el.getAttribute(`data-${lang}`);
     });
 
-    // Traduzione placeholder textarea
     const textarea = document.getElementById('q17_feedback');
     if (textarea) {
       textarea.placeholder = textarea.getAttribute(`data-${lang}-placeholder`);
@@ -200,8 +251,9 @@
   }
 
   function startTest() {
-    // Logica di avvio esperimento / WebGazer
-    console.log("Test avviato");
+    // Nasconde le istruzioni e mostra il questionario dopo il test
+    // (Oppure gestisci la transizione al video di tracciamento)
+    document.getElementById('questionnaire-section').style.display = 'block';
   }
 </script>
 
