@@ -358,10 +358,13 @@
         placeholderSuggestions: "Write any suggestions or specific questions here..."
       }
     };
+
     function setLanguage(lang) {
       currentLang = lang;
       document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
+      if (event && event.target) {
+        event.target.classList.add('active');
+      }
       const t = translations[lang];
       document.getElementById('txt-title').innerHTML = t.title;
       document.getElementById('txt-desc').innerHTML = t.desc;
@@ -448,6 +451,7 @@
       document.getElementById('opt-pi4').innerText = t.optPi4;
       document.getElementById('q_open_suggestions').placeholder = t.placeholderSuggestions;
     }
+
     window.onload = async function() {
       document.getElementById('status').innerText = translations[currentLang].statusInit;
       try {
@@ -463,6 +467,7 @@
         document.getElementById('status').innerText = translations[currentLang].statusErr;
       }
     };
+
     function startTest() {
       const video = document.getElementById('myVideo');
       video.muted = false;
@@ -477,6 +482,7 @@
       }).catch(err => { alert("Errore nell'avvio del video."); });
       video.onended = function() { stopAndShowSurvey(); };
     }
+
     function stopAndShowSurvey() {
       isTesting = false;
       const video = document.getElementById('myVideo');
@@ -515,6 +521,7 @@
       document.getElementById('survey-container').style.display = 'block';
       window.scrollTo(0,0);
     }
+
     function submitSurvey() {
       const form = document.getElementById('surveyForm');
       if (!form.checkValidity()) {
