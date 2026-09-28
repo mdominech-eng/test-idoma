@@ -37,8 +37,12 @@
     .lang-switch { margin-bottom: 20px; text-align: right; }
     .lang-btn { padding: 8px 16px; font-size: 14px; cursor: pointer; background: #333; color: white; border: 1px solid #555; border-radius: 4px; margin: 0 5px; font-weight: bold; }
     .lang-btn.active { background: #00a86b; border-color: #00a86b; }
-    .btn-start, .btn-submit { padding: 16px 32px; font-size: 18px; cursor: pointer; background: #00a86b; color: white; border: none; border-radius: 6px; font-weight: bold; margin-top: 20px; }
+    
+    /* Stili per pulsante avvio/calibrazione */
+    .btn-start, .btn-submit { padding: 16px 32px; font-size: 18px; cursor: pointer; background: #00a86b; color: white; border: none; border-radius: 6px; font-weight: bold; margin-top: 20px; transition: background 0.3s; }
+    .btn-start:disabled { background: #555555 !important; cursor: not-allowed; opacity: 0.7; }
     .btn-submit:hover { background: #008f5a; }
+    
     #stop-btn { display: none; position: absolute; top: 20px; right: 20px; padding: 12px 24px; font-size: 15px; background: #e63946; color: white; border: none; border-radius: 5px; cursor: pointer; z-index: 9999; font-weight: bold; }
     #survey-container { display: none; max-width: 800px; margin: 40px auto; text-align: left; background: #1e1e1e; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
     .section-title { color: #00a86b; border-bottom: 2px solid #00a86b; padding-bottom: 8px; margin-top: 35px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -53,6 +57,47 @@
     .likert-node input { margin: 0 0 6px 0; cursor: pointer; }
     .likert-node label { font-size: 13px; color: #ddd; font-weight: bold; margin: 0; }
     .likert-labels { display: flex; justify-content: space-between; font-size: 12px; color: #888; margin-top: 6px; }
+
+    /* Overlay Calibrazione */
+    #calibration-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(10, 10, 10, 0.95);
+      z-index: 10000;
+    }
+    #calibration-msg {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 20px;
+      font-weight: bold;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px 30px;
+      border-radius: 10px;
+      border: 1px solid #00a86b;
+      pointer-events: none;
+      text-align: center;
+      max-width: 80%;
+    }
+    .cal-point {
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      background-color: #e63946;
+      border: 3px solid #ffffff;
+      border-radius: 50%;
+      cursor: pointer;
+      transform: translate(-50%, -50%);
+      z-index: 10001;
+      box-shadow: 0 0 10px rgba(255,255,255,0.8);
+      transition: background-color 0.2s, transform 0.1s;
+    }
+    .cal-point:active {
+      transform: translate(-50%, -50%) scale(1.3);
+    }
   </style>
 </head>
 <body>
@@ -67,15 +112,21 @@
       Benvenuto/a nello studio sul prototipo <strong>IDOMA</strong>.<br>
       Guarda il video di presentazione normalmente, come se stessi osservando una pubblicità.<br><br>
       <strong style="color: #00a86b;">Informativa sulla Privacy:</strong><br>
-      • Prima di cliccare su AVVIA IL TEST, attendi qualche secondo che il riquadro attorno al tuo volto diventi verde e compaiano i punti di tracciamento sul viso.<br>
+      • Prima di cliccare su AVVIA CALIBRAZIONE, attendi qualche secondo che il riquadro attorno al tuo volto diventi verde e compaiano i punti di tracciamento sul viso.<br>
       • Il sistema rileva <u>esclusivamente le coordinate dello sguardo</u> sullo schermo.<br>
       • <u>Nessuna immagine del tuo volto viene salvata</u>.<br>
       • Risposte al questionario 100% anonime.<br>
       • Usa un PC con fotocamera inquadrata in un ambiente ben illuminato.
     </p>
-    <button class="btn-start" id="txt-startbtn" onclick="startTest()">AVVIA IL TEST</button>
+    <button class="btn-start" id="txt-startbtn" disabled onclick="handleStartClick()">AVVIA CALIBRAZIONE</button>
     <div id="status" style="margin-top: 15px; color: #00a86b; font-size: 13px; font-weight: bold;"></div>
   </div>
+
+  <!-- Overlay per la calibrazione a 9 punti -->
+  <div id="calibration-overlay">
+    <div id="calibration-msg"></div>
+  </div>
+
   <!-- Video Container -->
   <div id="video-container">
     <button id="stop-btn" onclick="stopAndShowSurvey()">TERMINA E VAI AL QUESTIONARIO</button>
@@ -256,18 +307,25 @@
     let gazeData = [];
     let isTesting = false;
     let isCameraReady = false;
+    let isCalibrated = false;
     let startTime = 0;
     let currentLang = 'it';
     
+    // Variabili per il tracciamento delle dimensioni del video e dello schermo
+    let videoDimensions = {};
+
     const scriptURL = "https://script.google.com/macros/s/AKfycbxsi0axRfa9yIlvf52aiSoVkNdte1tldZ5GpTohpUsdshPaO7q1-EXTPVCuLmxFd8h0kA/exec";
     const translations = {
       it: {
         title: "Test di Tracciamento Oculare - IDOMA",
-        desc: "Benvenuto/a nello studio sul prototipo <strong>IDOMA</strong>.<br>Guarda il video di presentazione normalmente, come se stessi osservando una pubblicità.<br><br><strong style='color: #00a86b;'>Informativa sulla Privacy:</strong><br>• Prima di cliccare su AVVIA IL TEST, attendi qualche secondo che il riquadro attorno al tuo volto diventi verde e compaiano i punti di tracciamento sul viso.<br>• Il sistema rileva <u>esclusivamente le coordinate dello sguardo</u> sullo schermo.<br>• <u>Nessuna immagine del tuo volto viene salvata</u>.<br>• Risposte al questionario 100% anonime.<br>• Usa un PC con fotocamera inquadrata in un ambiente ben illuminato.",
+        desc: "Benvenuto/a nello studio sul prototipo <strong>IDOMA</strong>.<br>Guarda il video di presentazione normalmente, come se stessi osservando una pubblicità.<br><br><strong style='color: #00a86b;'>Informativa sulla Privacy:</strong><br>• Prima di cliccare su AVVIA CALIBRAZIONE, attendi qualche secondo che il riquadro attorno al tuo volto diventi verde e compaiano i punti di tracciamento sul viso.<br>• Il sistema rileva <u>esclusivamente le coordinate dello sguardo</u> sullo schermo.<br>• <u>Nessuna immagine del tuo volto viene salvata</u>.<br>• Risposte al questionario 100% anonime.<br>• Usa un PC con fotocamera inquadrata in un ambiente ben illuminato.",
         startBtn: "AVVIA IL TEST",
+        calibBtn: "AVVIA CALIBRAZIONE",
+        calibInstruction: "Per favore, esegui la calibrazione.<br>Guarda e clicca 5 volte ciascuno dei 9 punti rossi che appariranno sullo schermo.",
+        calibCompletedMsg: "Calibrazione completata! Ora puoi avviare il test.",
         stopBtn: "TERMINA E VAI AL QUESTIONARIO",
         statusInit: "Inizializzazione fotocamera in corso...",
-        statusReady: "Fotocamera pronta. Inquadrati bene e clicca AVVIA IL TEST.",
+        statusReady: "Fotocamera pronta. Inquadrati bene e clicca AVVIA CALIBRAZIONE.",
         statusErr: "Errore: Consenti l'accesso alla webcam nel browser.",
         surveyTitle: "Questionario di Valutazione Concept IDOMA",
         surveySub: "La registrazione della fotocamera è terminata. Rispondi alle seguenti domande per completare lo studio.",
@@ -311,11 +369,14 @@
       },
       en: {
         title: "Eye Tracking Study - IDOMA",
-        desc: "Welcome to the <strong>IDOMA</strong> research study.<br>Watch the presentation video naturally as if viewing a commercial.<br><br><strong style='color: #00a86b;'>Privacy Notice:</strong><br>• Before clicking START TEST, please wait a few seconds for the box around your face to turn green and for tracking points to appear on your face.<br>• The system <u>only tracks gaze coordinates</u> on screen.<br>• <u>No face video or images are stored</u>.<br>• Questionnaire responses are 100% anonymous.<br>• Please use a PC with a camera in a well-lit room.",
+        desc: "Welcome to the <strong>IDOMA</strong> research study.<br>Watch the presentation video naturally as if viewing a commercial.<br><br><strong style='color: #00a86b;'>Privacy Notice:</strong><br>• Before clicking START CALIBRATION, please wait a few seconds for the box around your face to turn green and for tracking points to appear on your face.<br>• The system <u>only tracks gaze coordinates</u> on screen.<br>• <u>No face video or images are stored</u>.<br>• Questionnaire responses are 100% anonymous.<br>• Please use a PC with a camera in a well-lit room.",
         startBtn: "START TEST",
+        calibBtn: "START CALIBRATION",
+        calibInstruction: "Please complete calibration.<br>Look at and click each of the 9 red points on the screen 5 times.",
+        calibCompletedMsg: "Calibration completed! You can now start the test.",
         stopBtn: "END VIDEO & GO TO QUESTIONNAIRE",
         statusInit: "Initializing camera...",
-        statusReady: "Camera ready. Position yourself well and click START TEST.",
+        statusReady: "Camera ready. Position yourself well and click START CALIBRATION.",
         statusErr: "Error: Please allow webcam access in your browser.",
         surveyTitle: "IDOMA Concept Evaluation Questionnaire",
         surveySub: "Camera recording has ended. Please answer the following questions to complete the study.",
@@ -368,13 +429,20 @@
       const t = translations[lang];
       document.getElementById('txt-title').innerHTML = t.title;
       document.getElementById('txt-desc').innerHTML = t.desc;
-      document.getElementById('txt-startbtn').innerText = t.startBtn;
+      
+      const startBtn = document.getElementById('txt-startbtn');
+      if (isCalibrated) {
+        startBtn.innerText = t.startBtn;
+      } else {
+        startBtn.innerText = t.calibBtn;
+      }
+      
       document.getElementById('stop-btn').innerText = t.stopBtn;
       
       // Aggiorna lo stato fotocamera in base alla lingua
       const statusElem = document.getElementById('status');
       if (isCameraReady) {
-        statusElem.innerText = t.statusReady;
+        statusElem.innerText = isCalibrated ? t.calibCompletedMsg : t.statusReady;
       } else {
         statusElem.innerText = t.statusInit;
       }
@@ -463,10 +531,82 @@
         webgazer.showVideoPreview(true).showPredictionPoints(false);
         isCameraReady = true;
         document.getElementById('status').innerText = translations[currentLang].statusReady;
+        document.getElementById('txt-startbtn').disabled = false;
       } catch (err) {
         document.getElementById('status').innerText = translations[currentLang].statusErr;
       }
     };
+
+    function handleStartClick() {
+      if (!isCalibrated) {
+        startCalibration();
+      } else {
+        startTest();
+      }
+    }
+
+    /* Gestione Calibrazione a 9 Punti */
+    function startCalibration() {
+      const overlay = document.getElementById('calibration-overlay');
+      const msg = document.getElementById('calibration-msg');
+      msg.innerHTML = translations[currentLang].calibInstruction;
+      overlay.style.display = 'block';
+
+      // Rimuove eventuali vecchi punti
+      document.querySelectorAll('.cal-point').forEach(pt => pt.remove());
+
+      // Punti griglia 3x3: coordinate percentuali (X%, Y%)
+      const pointsCoords = [
+        { x: 10, y: 10 }, { x: 50, y: 10 }, { x: 90, y: 10 },
+        { x: 10, y: 50 }, { x: 50, y: 50 }, { x: 90, y: 50 },
+        { x: 10, y: 90 }, { x: 50, y: 90 }, { x: 90, y: 90 }
+      ];
+
+      let completedPoints = 0;
+      const clicksNeededPerPoint = 5;
+
+      pointsCoords.forEach((pt, index) => {
+        const pointElem = document.createElement('div');
+        pointElem.className = 'cal-point';
+        pointElem.style.left = pt.x + '%';
+        pointElem.style.top = pt.y + '%';
+        let clicks = 0;
+
+        pointElem.onclick = function(e) {
+          clicks++;
+          // Registra il punto di clic per calibrare WebGazer
+          if (typeof webgazer !== 'undefined') {
+            webgazer.recordScreenPosition(e.clientX, e.clientY, 'click');
+          }
+          
+          if (clicks < clicksNeededPerPoint) {
+            let opacity = 1 - (clicks / clicksNeededPerPoint) * 0.5;
+            pointElem.style.opacity = opacity;
+          } else {
+            pointElem.style.backgroundColor = '#00a86b';
+            pointElem.style.pointerEvents = 'none';
+            completedPoints++;
+            
+            if (completedPoints === pointsCoords.length) {
+              setTimeout(() => {
+                overlay.style.display = 'none';
+                finishCalibration();
+              }, 400);
+            }
+          }
+        };
+
+        overlay.appendChild(pointElem);
+      });
+    }
+
+    function finishCalibration() {
+      isCalibrated = true;
+      const startBtn = document.getElementById('txt-startbtn');
+      startBtn.innerText = translations[currentLang].startBtn;
+      startBtn.style.background = '#00a86b';
+      document.getElementById('status').innerText = translations[currentLang].calibCompletedMsg;
+    }
 
     function startTest() {
       const video = document.getElementById('myVideo');
@@ -476,9 +616,22 @@
       document.getElementById('intro').style.display = 'none';
       document.getElementById('video-container').style.display = 'flex';
       document.getElementById('stop-btn').style.display = 'block';
+      
       video.play().then(() => {
         startTime = performance.now();
         isTesting = true;
+
+        // Rilevamento e registrazione precisa delle dimensioni del video e dello schermo
+        const rect = video.getBoundingClientRect();
+        videoDimensions = {
+          video_rendered_width: Math.round(rect.width),
+          video_rendered_height: Math.round(rect.height),
+          video_natural_width: video.videoWidth,
+          video_natural_height: video.videoHeight,
+          window_inner_width: window.innerWidth,
+          window_inner_height: window.innerHeight,
+          device_pixel_ratio: window.devicePixelRatio || 1
+        };
       }).catch(err => { alert("Errore nell'avvio del video."); });
       video.onended = function() { stopAndShowSurvey(); };
     }
@@ -532,9 +685,22 @@
       let surveyHtml = `
         <div style="font-family: Arial, sans-serif; padding: 30px; color: #222; max-width: 750px; margin: 0 auto;">
           <h1 style="color: #00a86b;">IDOMA - Evaluation Survey</h1>
-          <p><strong>Date:</strong> ${new Date().toLocaleString()}</p><hr>
+          <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+          <div style="background:#f4f4f4; padding:15px; border-radius:6px; margin-bottom:20px;">
+            <p style="margin:4px 0;"><strong>Video Rendered Size:</strong> ${videoDimensions.video_rendered_width || 0} x ${videoDimensions.video_rendered_height || 0} px</p>
+            <p style="margin:4px 0;"><strong>Video Natural Size:</strong> ${videoDimensions.video_natural_width || 0} x ${videoDimensions.video_natural_height || 0} px</p>
+            <p style="margin:4px 0;"><strong>Screen Resolution:</strong> ${videoDimensions.window_inner_width || 0} x ${videoDimensions.window_inner_height || 0} px (DPR: ${videoDimensions.device_pixel_ratio || 1})</p>
+          </div>
+          <hr>
       `;
       let surveyCsv = "sep=,\nQuestion_ID,Question_Text,Answer\n";
+      
+      // Aggiunta parametri video al CSV del questionario
+      surveyCsv += `META_VIDEO_RENDERED,"Video Rendered Width x Height (px)","${videoDimensions.video_rendered_width || 0}x${videoDimensions.video_rendered_height || 0}"\n`;
+      surveyCsv += `META_VIDEO_NATURAL,"Video Natural Width x Height (px)","${videoDimensions.video_natural_width || 0}x${videoDimensions.video_natural_height || 0}"\n`;
+      surveyCsv += `META_SCREEN_SIZE,"Window Inner Width x Height (px)","${videoDimensions.window_inner_width || 0}x${videoDimensions.window_inner_height || 0}"\n`;
+      surveyCsv += `META_DPR,"Device Pixel Ratio","${videoDimensions.device_pixel_ratio || 1}"\n`;
+
       const questions = form.querySelectorAll('.question');
       
       questions.forEach((qDiv, index) => {
@@ -545,13 +711,25 @@
         surveyCsv += `Q${index + 1},"${qText.replace(/"/g, '""')}","${val.replace(/"/g, '""')}"\n`;
       });
       surveyHtml += `</div>`;
-      let csvContent = "sep=,\nTimestamp_ms,X_pixel,Y_pixel\n";
+
+      // Header dettagliato per i dati di sguardo (Eye Tracking Data)
+      let csvContent = `sep=,\n# Video_Rendered_Width:${videoDimensions.video_rendered_width || 0},Video_Rendered_Height:${videoDimensions.video_rendered_height || 0}\n`;
+      csvContent += `# Video_Natural_Width:${videoDimensions.video_natural_width || 0},Video_Natural_Height:${videoDimensions.video_natural_height || 0}\n`;
+      csvContent += `# Window_Width:${videoDimensions.window_inner_width || 0},Window_Height:${videoDimensions.window_inner_height || 0},DPR:${videoDimensions.device_pixel_ratio || 1}\n`;
+      csvContent += "Timestamp_ms,X_pixel,Y_pixel\n";
+
       gazeData.forEach(function(row) { csvContent += `${row.time},${row.x},${row.y}\n`; });
+
       fetch(scriptURL, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ csvData: csvContent, surveyCsv: surveyCsv, surveyHtml: surveyHtml })
+        body: JSON.stringify({ 
+          csvData: csvContent, 
+          surveyCsv: surveyCsv, 
+          surveyHtml: surveyHtml,
+          videoDimensions: videoDimensions
+        })
       })
       .then(() => {
         document.getElementById('survey-container').innerHTML = "<h2 style='text-align:center; color:#00a86b; margin-top:50px;'>Grazie! Il test è stato inviato ed è completato.<br><i>Thank you! The study has been successfully submitted.</i></h2>";
